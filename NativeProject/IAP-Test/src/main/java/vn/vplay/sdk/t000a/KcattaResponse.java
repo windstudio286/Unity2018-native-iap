@@ -7,9 +7,14 @@ public class KcattaResponse {
     @SerializedName("success")
     @Expose
     private boolean success;
-    @SerializedName("message")
+
+    @SerializedName("key")
     @Expose
-    private String message;
+    private String key;
+
+    @SerializedName("value")
+    @Expose
+    private Object value;
 
     public boolean isSuccess() {
         return success;
@@ -19,11 +24,20 @@ public class KcattaResponse {
         this.success = success;
     }
 
-    public String getMessage() {
-        return message;
+    public Object getMessage() {
+        return value;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessage(Object message) {
+        this.value = message;
+    }
+
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

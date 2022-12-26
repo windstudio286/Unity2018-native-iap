@@ -216,6 +216,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                                 .create();
                         KcattaResponse response = new KcattaResponse();
                         response.setSuccess(false);
+                        response.setKey(KcattaCmd.PAY_PRODUCT);
                         response.setMessage(error.getMessage());
                         String jsonData = gson.toJson(response);
                         Log.i("BEM",jsonData);
@@ -246,7 +247,11 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                         Gson gson = new GsonBuilder()
                                 .excludeFieldsWithoutExposeAnnotation()
                                 .create();
-                        String jsonData = gson.toJson(products);
+                        KcattaResponse response = new KcattaResponse();
+                        response.setSuccess(true);
+                        response.setKey(KcattaCmd.GET_PRODUCT);
+                        response.setMessage(products);
+                        String jsonData = gson.toJson(response);
                         Log.i("BEM",jsonData);
                         mUnityPlayer.UnitySendMessage(receivedObject,receivedFunc,jsonData);
                     }
