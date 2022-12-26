@@ -61,7 +61,7 @@ public class KcattaSdk implements PurchasesUpdatedListener {
         }
         availableProducts.clear();
         Log.d("TAG", "reqListProduct count" + reqListProduct.size());
-        if (billingClient.isReady()) {
+        if (isBillingReady()) {
             List<String> skuList = new ArrayList<>();
             for (ProductInfo item : reqListProduct) {
                 Log.d("TAG", "skuList.add" + item.getProductId());
