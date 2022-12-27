@@ -15,6 +15,7 @@ import android.view.Window;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +71,6 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
         KcattaSdk sdk = KcattaSdk.GetInstance();
         sdk.Init(this);
         sdk.SetGameListener(this);
-
     }
 
     @Override protected void onNewIntent(Intent intent)
@@ -184,6 +184,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                                 .create();
                         KcattaResponse response = new KcattaResponse();
                         response.setSuccess(true);
+                        response.setKey(KcattaCmd.PAY_PRODUCT);
                         response.setMessage(productId);
                         String jsonData = gson.toJson(response);
                         Log.i("BEM",jsonData);
