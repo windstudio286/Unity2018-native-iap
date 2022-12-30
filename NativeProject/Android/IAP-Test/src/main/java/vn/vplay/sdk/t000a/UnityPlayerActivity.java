@@ -2,28 +2,44 @@ package vn.vplay.sdk.t000a;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.onesignal.OneSignal;
 import com.unity3d.player.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
-
+import android.view.WindowManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class UnityPlayerActivity extends Activity implements KcattaListener
 {
+    private static final String ONESIGNAL_APP_ID = "509fba34-5690-491b-9bda-276958ff3881";
     protected UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
-    protected HashMap<String,JSONObject> hashMapCmd;
+
+    // Override this in your custom UnityPlayerActivity to tweak the command line arguments passed to the Unity Android Player
+    // The command line arguments are passed as a string, separated by spaces
+    // UnityPlayerActivity calls this from 'onCreate'
+    // Supported: -force-gles20, -force-gles30, -force-gles31, -force-gles31aep, -force-gles32, -force-gles, -force-vulkan
+    // See https://docs.unity3d.com/Manual/CommandLineArguments.html
+    // @param cmdLine the current command line arguments, may be null
+    // @return the modified command line string or null
+    protected String updateUnityCommandLineArguments(String cmdLine)
+    {
+        return cmdLine;
+    }
+
+    protected HashMap<String, JSONObject> hashMapCmd;
     public void sendDataFromUnity(String json) {
         Log.i("BEM","sendDataFromUnity: "+json);
         //receivedObject: IAPUnitySingleton
@@ -64,13 +80,28 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
 
+        String cmdLine = updateUnityCommandLineArguments(getIntent().getStringExtra("unity"));
+        getIntent().putExtra("unity", cmdLine);
+
         mUnityPlayer = new UnityPlayer(this);
         setContentView(mUnityPlayer);
         mUnityPlayer.requestFocus();
+
         hashMapCmd = new HashMap<>();
         KcattaSdk sdk = KcattaSdk.GetInstance();
         sdk.Init(this);
         sdk.SetGameListener(this);
+
+        // Enable verbose OneSignal logging to debug issues if needed.
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId(ONESIGNAL_APP_ID);
+
+        // promptForPushNotifications will show the native Android notification permission prompt.
+        // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
+        OneSignal.promptForPushNotifications();
     }
 
     @Override protected void onNewIntent(Intent intent)
@@ -86,7 +117,6 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     @Override protected void onDestroy ()
     {
         mUnityPlayer.destroy();
-        KcattaSdk.GetInstance().destroySDK();
         super.onDestroy();
     }
 
@@ -264,6 +294,34 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
 
     @Override
     public void onGetProductError(Error error) {
+        if(hashMapCmd != null){
+            JSONObject json = hashMapCmd.get(KcattaCmd.PAY_PRODUCT);
+            if(json != null){
+                String receivedObject = null;
+                String receivedFunc = null;
+                try {
+                    receivedObject = json.getString(KcattaConstants.JSON_RECEIVED_OBJECT);
+                    receivedFunc = json.getString(KcattaConstants.JSON_RECEIVED_FUNCTION);
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(receivedObject != null && receivedFunc != null){
+                    Log.i("BEM","sendDataFromNative");
+                    if(mUnityPlayer != null){
+                        Gson gson = new GsonBuilder()
+                                .excludeFieldsWithoutExposeAnnotation()
+                                .create();
+                        KcattaResponse response = new KcattaResponse();
+                        response.setSuccess(false);
+                        response.setKey(KcattaCmd.GET_PRODUCT);
+                        response.setMessage("");
+                        String jsonData = gson.toJson(response);
+                        Log.i("BEM",jsonData);
+                        mUnityPlayer.UnitySendMessage(receivedObject,receivedFunc,jsonData);
+                    }
+                }
+            }
+        }
     }
 }
