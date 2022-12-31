@@ -9,7 +9,7 @@ buildscript {
     dependencies {
         //classpath 'com.android.tools.build:gradle:3.2.0'
         //classpath 'com.android.tools.build:gradle:4.0.1'
-        classpath 'com.android.tools.build:gradle:7.0.0'
+        classpath 'com.android.tools.build:gradle:7.0.2'
 }
 }
 
@@ -93,7 +93,7 @@ android {
 
 dependencies {
     def retrofit_version = "2.1.0"
-    def billing_version = "4.0.0"
+    def billing_version = "5.0.0"
     def gson_version = "2.10"
     implementation "com.android.billingclient:billing:$billing_version"
     implementation "com.google.code.gson:gson:$gson_version"
