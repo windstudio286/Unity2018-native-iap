@@ -1,5 +1,6 @@
 package vn.vplay.sdk.t000a;
 
+import com.android.billingclient.api.BillingClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.onesignal.OneSignal;
@@ -7,14 +8,12 @@ import com.unity3d.player.*;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,13 +58,24 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     prod1.setProductId("vn.vplay.sdk.t000a.demoproduct1");
                     ProductInfo prod2 = new ProductInfo();
                     prod2.setProductId("vn.vplay.sdk.t000a.demoproduct2");
-                    productInfoList.add(prod1);
-                    productInfoList.add(prod2);
-                    KcattaSdk.GetInstance().RequestPriceProduct(productInfoList);
+                    ProductInfo prod3 = new ProductInfo();
+                    prod3.setProductId("vn.vplay.sdk.t000a.subs1");
+
+                    ProductInfo prod4 = new ProductInfo();
+                    prod4.setProductId("vn.vplay.sdk.t000a.removeads");
+                    prod4.setProductType(KcattaConstants.PRODUCT_TYPE_NON_CONSUMABLE);
+                    //productInfoList.add(prod1);
+                    //productInfoList.add(prod2);
+                    productInfoList.add(prod3);
+                    productInfoList.add(prod4);
+                    KcattaSdk.getInstance().requestPriceProduct2(productInfoList,BillingClient.ProductType.INAPP);
                 }
                 if(key.equals(KcattaCmd.PAY_PRODUCT)){
                     String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
-                    KcattaSdk.GetInstance().PayProduct(value);
+                    value = "vn.vplay.sdk.t000a.subs1";
+                    value = "vn.vplay.sdk.t000a.removeads";
+                    KcattaSdk.getInstance().payProduct2(value,BillingClient.ProductType.INAPP);
+                    //KcattaSdk.GetInstance().queryHistoryPurchase();
                 }
             }
         } catch (JSONException e) {
@@ -88,9 +98,11 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
         mUnityPlayer.requestFocus();
 
         hashMapCmd = new HashMap<>();
-        KcattaSdk sdk = KcattaSdk.GetInstance();
-        sdk.Init(this);
-        sdk.SetGameListener(this);
+        KcattaSdk sdk = KcattaSdk.getInstance();
+        AppInfo appInfo = new AppInfo();
+        appInfo.oneSignalId = ONESIGNAL_APP_ID;
+        sdk.init(this,appInfo);
+        sdk.setGameListener(this);
 
         // Enable verbose OneSignal logging to debug issues if needed.
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
