@@ -9,4 +9,8 @@ public class KcattaConstants {
     public final static String PRODUCT_TYPE_CONSUMABLE = "consumable";
     public final static String PRODUCT_TYPE_NON_CONSUMABLE = "non-consumable";
     public final static String PRODUCT_TYPE_SUBS = "subs";
+
+    public final static String ADS_TYPE_BANNER = "bannerAd";
+    public final static String ADS_TYPE_INTERSTITIAL = "interstitialAd";
+    public final static String ADS_TYPE_REWARDED = "rewardedAd";
 }

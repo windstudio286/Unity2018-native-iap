@@ -2,6 +2,7 @@ package vn.vplay.sdk.t000a;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,16 +36,24 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.google.ads.mediation.admob.AdMobAdapter;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.onesignal.OneSignal;
 import com.unity3d.player.UnityPlayer;
 
 import java.util.ArrayList;
@@ -53,16 +62,12 @@ import java.util.List;
 public class KcattaSdk implements PurchasesUpdatedListener {
     private static final String TAG = KcattaSdk.class.getSimpleName();
     private static KcattaSdk INSTANCE;
-    private UnityPlayer unityPlayer;
     private KcattaListener gameListener;
     private BillingClient billingClient;
     private Activity hostedActivity;
     private AppInfo appInfo;
     private List<ProductInfo> availableInappProducts;
     private List<ProductInfo> availableSubsProducts;
-    private AdListener bannerAdListener;
-    private AdListener interstitialAdListener;
-    private AdListener rewardedAdListener;
 
     private AdView mBannerView = null;
     private InterstitialAd mInterstitialAd = null;
@@ -73,6 +78,10 @@ public class KcattaSdk implements PurchasesUpdatedListener {
             INSTANCE = new KcattaSdk();
         }
         return INSTANCE;
+    }
+
+    public Activity getHostedActivity(){
+        return hostedActivity;
     }
 
     public AppInfo getAppInfo(){
@@ -230,9 +239,11 @@ public class KcattaSdk implements PurchasesUpdatedListener {
     }
 
     public void init(Activity hostedActivity, AppInfo appInfo){
-            this.hostedActivity = hostedActivity;
-            this.appInfo = appInfo;
-            initBilling();
+        this.hostedActivity = hostedActivity;
+        this.appInfo = appInfo;
+        initOneSignal();
+        initBilling();
+        initAds();
     }
 
     private void initAds(){
@@ -244,41 +255,28 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                 }
             });
 
-            List<String> testDevices = new ArrayList<>();
-            testDevices.add("32A371912B7A42FA62F47C90B83D6A4E");
-
-            if(!this.appInfo.tagForChildDirectedTreatment) {
-                RequestConfiguration requestConfiguration
-                        = new RequestConfiguration.Builder()
-                        .setTestDeviceIds(testDevices)
-                        .build();
-                MobileAds.setRequestConfiguration(requestConfiguration);
-            }
-            else{
-                RequestConfiguration requestConfiguration
-                        = new RequestConfiguration.Builder()
-                        .setTestDeviceIds(testDevices)
-                        .setTagForChildDirectedTreatment(RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE)
-                        .build();
-                MobileAds.setRequestConfiguration(requestConfiguration);
+            if(this.appInfo.testDevices != null) {
+                if (!this.appInfo.tagForChildDirectedTreatment) {
+                    RequestConfiguration requestConfiguration
+                            = new RequestConfiguration.Builder()
+                            .setTestDeviceIds(this.appInfo.testDevices)
+                            .build();
+                    MobileAds.setRequestConfiguration(requestConfiguration);
+                } else {
+                    RequestConfiguration requestConfiguration
+                            = new RequestConfiguration.Builder()
+                            .setTestDeviceIds(this.appInfo.testDevices)
+                            .setTagForChildDirectedTreatment(RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE)
+                            //.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_G)
+                            .build();
+                    MobileAds.setRequestConfiguration(requestConfiguration);
+                }
             }
         }
     }
 
     public void setGameListener(KcattaListener gameListener){
         this.gameListener = gameListener;
-    }
-
-    public void setBannerAdListener(AdListener item){
-        this.bannerAdListener = item;
-    }
-
-    public void setInterstitialAdListener(AdListener item){
-        this.interstitialAdListener = item;
-    }
-
-    public void setRewardedAdListener(AdListener item){
-        this.rewardedAdListener = item;
     }
 
     private BillingClientStateListener billingClientStateListener = new BillingClientStateListener() {
@@ -301,6 +299,19 @@ public class KcattaSdk implements PurchasesUpdatedListener {
             }
         }
     };
+
+    private void initOneSignal(){
+        // Enable verbose OneSignal logging to debug issues if needed.
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this.hostedActivity);
+        OneSignal.setAppId(appInfo.oneSignalId);
+
+        // promptForPushNotifications will show the native Android notification permission prompt.
+        // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
+        OneSignal.promptForPushNotifications();
+    }
 
     private void initBilling(){
         if (availableInappProducts == null) {
@@ -596,19 +607,209 @@ public class KcattaSdk implements PurchasesUpdatedListener {
         return null;
     }
 
+    public void createRewardedAd(final String unitId){
+        if(mRewardedAd == null) {
+            //Bundle extras = new Bundle();
+            //add https://developers.google.com/admob/android/test-creative-types
+            //extras.putString("ft_ctype", "video_app_install");
+
+            AdRequest adRequest = new AdRequest.Builder()
+                    //.addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                    .build();
+            RewardedAd.load(this.hostedActivity, unitId,
+                    adRequest, new RewardedAdLoadCallback() {
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            // Handle the error.
+                            Log.d(TAG, loadAdError.toString());
+                            if(gameListener != null){
+                                gameListener.onAdFailedToLoad(KcattaConstants.ADS_TYPE_REWARDED,unitId,loadAdError);
+                            }
+                            mRewardedAd = null;
+                        }
+
+                        @Override
+                        public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                            Log.d(TAG, "Ad was loaded.");
+                            mRewardedAd = rewardedAd;
+                            if(gameListener != null){
+                                gameListener.onAdLoaded(KcattaConstants.ADS_TYPE_REWARDED,unitId);
+                            }
+                            mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                                @Override
+                                public void onAdClicked() {
+                                    // Called when a click is recorded for an ad.
+                                    Log.d(TAG, "Ad was clicked.");
+                                }
+
+                                @Override
+                                public void onAdDismissedFullScreenContent() {
+                                    // Called when ad is dismissed.
+                                    // Set the ad reference to null so you don't show the ad a second time.
+                                    Log.d(TAG, "Ad dismissed fullscreen content.");
+                                    if(gameListener != null){
+                                        gameListener.onAdClosed(KcattaConstants.ADS_TYPE_REWARDED,unitId);
+                                    }
+                                    mRewardedAd = null;
+                                }
+
+                                @Override
+                                public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                    // Called when ad fails to show.
+                                    Log.e(TAG, "Ad failed to show fullscreen content.");
+                                    if(gameListener != null){
+                                        gameListener.onAdFailedToLoad(KcattaConstants.ADS_TYPE_REWARDED,unitId,adError);
+                                    }
+
+                                    mRewardedAd = null;
+                                }
+
+                                @Override
+                                public void onAdImpression() {
+                                    // Called when an impression is recorded for an ad.
+                                    Log.d(TAG, "Ad recorded an impression.");
+                                }
+
+                                @Override
+                                public void onAdShowedFullScreenContent() {
+                                    // Called when ad is shown.
+                                    Log.d(TAG, "Ad showed fullscreen content.");
+                                    if(gameListener != null){
+                                        gameListener.onAdOpened(KcattaConstants.ADS_TYPE_REWARDED,unitId);
+                                    }
+                                }
+                            });
+                        }
+                    });
+        }
+    }
+
+    public void createInterstitalAd(final String unitId){
+        if(mInterstitialAd == null) {
+            AdRequest adRequestBuilder = new AdRequest.Builder().build();
+            InterstitialAd.load(this.hostedActivity, unitId, adRequestBuilder, new InterstitialAdLoadCallback() {
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    Log.d(TAG, "Interstitial onAdFailedToLoad");
+                    super.onAdFailedToLoad(loadAdError);
+                    if(gameListener != null){
+                        gameListener.onAdFailedToLoad(KcattaConstants.ADS_TYPE_INTERSTITIAL,unitId,loadAdError);
+                    }
+                    mInterstitialAd = null;
+                }
+
+                @Override
+                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                    Log.d(TAG, "Interstitial onAdLoaded");
+                    super.onAdLoaded(interstitialAd);
+                    if(gameListener != null){
+                        gameListener.onAdLoaded(KcattaConstants.ADS_TYPE_INTERSTITIAL,unitId);
+                    }
+                    mInterstitialAd = interstitialAd;
+                    mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                        @Override
+                        public void onAdClicked() {
+                            // Called when a click is recorded for an ad.
+                            Log.d(TAG, "Ad was clicked.");
+                        }
+
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            // Called when ad is dismissed.
+                            // Set the ad reference to null so you don't show the ad a second time.
+                            Log.d(TAG, "Ad dismissed fullscreen content.");
+                            if(gameListener != null){
+                                gameListener.onAdClosed(KcattaConstants.ADS_TYPE_INTERSTITIAL,unitId);
+                            }
+                            mInterstitialAd = null;
+                        }
+
+                        @Override
+                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            // Called when ad fails to show.
+                            Log.e(TAG, "Ad failed to show fullscreen content.");
+                            if(gameListener != null){
+                                gameListener.onAdFailedToLoad(KcattaConstants.ADS_TYPE_INTERSTITIAL,unitId,adError);
+                            }
+                            mInterstitialAd = null;
+                        }
+
+                        @Override
+                        public void onAdImpression() {
+                            // Called when an impression is recorded for an ad.
+                            Log.d(TAG, "Ad recorded an impression.");
+                        }
+
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                            // Called when ad is shown.
+                            Log.d(TAG, "Ad showed fullscreen content.");
+                            if(gameListener != null){
+                                gameListener.onAdOpened(KcattaConstants.ADS_TYPE_INTERSTITIAL,unitId);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     @SuppressLint("MissingPermission")
-    private void addOrCreateBannerAd(String bannerId, String orientation, String aligment){
+    public void addOrCreateBannerAd(final String bannerId, String aligment){
         if(mBannerView == null && hostedActivity != null){
             mBannerView = new AdView(this.hostedActivity);
             mBannerView.setVisibility(View.GONE);
             if(mBannerView != null){
-                mBannerView.setAdListener(bannerAdListener);
+                mBannerView.setAdListener(new AdListener() {
+                    public void onAdClosed() {
+                        Log.d(TAG,"onAdClosed");
+                        if(gameListener != null){
+                            gameListener.onAdClosed(KcattaConstants.ADS_TYPE_BANNER,bannerId);
+                        }
+                    }
+
+                    public void onAdFailedToLoad(LoadAdError loadAdError) {
+                        String msg = loadAdError.getMessage();
+                        Log.d(TAG,"onAdFailedToLoad " + msg);
+                        if(gameListener != null){
+                            gameListener.onAdFailedToLoad(KcattaConstants.ADS_TYPE_BANNER,bannerId,loadAdError);
+                        }
+                    }
+
+                    public void onAdLeftApplication() {
+                        Log.d(TAG,"onAdLeftApplication");
+                    }
+
+                    public void onAdLoaded() {
+                        Log.d(TAG, "onAdLoaded");
+                        if(gameListener != null){
+                            gameListener.onAdLoaded(KcattaConstants.ADS_TYPE_BANNER,bannerId);
+                        }
+                    }
+
+                    public void onAdOpened() {
+                        Log.d(TAG,"onAdOpened");
+                        if(gameListener != null){
+                            gameListener.onAdOpened(KcattaConstants.ADS_TYPE_BANNER,bannerId);
+                        }
+                    }
+                });
+            }
+            String orientation = "landscape";
+            int orient= this.hostedActivity.getResources().getConfiguration().orientation;
+            if (orient == Configuration.ORIENTATION_LANDSCAPE) {
+                // In landscape
+                orientation = "landscape";
+            } else {
+                // In portrait
+                orientation = "portrait";
             }
             AdSize adSize = getAdSize(orientation);
             Log.d(TAG,"adSize "+adSize.getHeight());
             Log.d(TAG,"adSize "+adSize.getWidth());
             mBannerView.setAdSize(adSize);
             mBannerView.setAdUnitId(bannerId);
+
             this.addToRootView(this.hostedActivity,mBannerView,aligment);
         }
         AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
@@ -706,5 +907,43 @@ public class KcattaSdk implements PurchasesUpdatedListener {
             }
         }
         return adSize;
+    }
+
+    public void hideBannerAd(){
+        if(mBannerView != null){
+            mBannerView.setVisibility(View.GONE);
+        }
+    }
+
+    public void showBannerAd(){
+        if(mBannerView != null){
+            mBannerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void showIntestitialAd(){
+        if (mInterstitialAd != null) {
+            mInterstitialAd.show(this.hostedActivity);
+        } else {
+            Log.d("TAG", "The interstitial ad wasn't ready yet.");
+        }
+    }
+    public void showRewardedAd(){
+        if (mRewardedAd != null) {
+            mRewardedAd.show(this.hostedActivity, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    // Handle the reward.
+                    Log.d(TAG, "The user earned the reward.");
+                    int rewardAmount = rewardItem.getAmount();
+                    String rewardType = rewardItem.getType();
+                    if(gameListener != null){
+                        gameListener.onAdEarnedReward(KcattaConstants.ADS_TYPE_REWARDED,mRewardedAd.getAdUnitId(),rewardAmount);
+                    }
+                }
+            });
+        } else {
+            Log.d(TAG, "The rewarded ad wasn't ready yet.");
+        }
     }
 }

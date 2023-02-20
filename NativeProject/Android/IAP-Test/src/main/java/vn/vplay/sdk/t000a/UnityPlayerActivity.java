@@ -1,6 +1,8 @@
 package vn.vplay.sdk.t000a;
 
 import com.android.billingclient.api.BillingClient;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.onesignal.OneSignal;
@@ -53,7 +55,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     hashMapCmd.put(key,jsonObject);
                 }
                 if(key.equals(KcattaCmd.GET_PRODUCT)){
-                    List<ProductInfo> productInfoList = new ArrayList<>();
+                    /*List<ProductInfo> productInfoList = new ArrayList<>();
                     ProductInfo prod1 = new ProductInfo();
                     prod1.setProductId("vn.vplay.sdk.t000a.demoproduct1");
                     ProductInfo prod2 = new ProductInfo();
@@ -68,14 +70,17 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     //productInfoList.add(prod2);
                     productInfoList.add(prod3);
                     productInfoList.add(prod4);
-                    KcattaSdk.getInstance().requestPriceProduct2(productInfoList,BillingClient.ProductType.INAPP);
+                    KcattaSdk.getInstance().requestPriceProduct2(productInfoList,BillingClient.ProductType.INAPP);*/
+                    KcattaSdk.getInstance().addOrCreateBannerAd("ca-app-pub-3940256099942544/6300978111","bottom");
+
                 }
                 if(key.equals(KcattaCmd.PAY_PRODUCT)){
-                    String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
+                    /*String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
                     value = "vn.vplay.sdk.t000a.subs1";
                     value = "vn.vplay.sdk.t000a.removeads";
-                    KcattaSdk.getInstance().payProduct2(value,BillingClient.ProductType.INAPP);
+                    KcattaSdk.getInstance().payProduct2(value,BillingClient.ProductType.INAPP);*/
                     //KcattaSdk.GetInstance().queryHistoryPurchase();
+                    KcattaSdk.getInstance().showBannerAd();
                 }
             }
         } catch (JSONException e) {
@@ -103,7 +108,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
         appInfo.oneSignalId = ONESIGNAL_APP_ID;
         sdk.init(this,appInfo);
         sdk.setGameListener(this);
-
+        /*
         // Enable verbose OneSignal logging to debug issues if needed.
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
 
@@ -113,7 +118,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
 
         // promptForPushNotifications will show the native Android notification permission prompt.
         // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
-        OneSignal.promptForPushNotifications();
+        OneSignal.promptForPushNotifications();*/
     }
 
     @Override protected void onNewIntent(Intent intent)
@@ -335,5 +340,30 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                 }
             }
         }
+    }
+
+    @Override
+    public void onAdFailedToLoad(String adType, String adId, AdError error) {
+
+    }
+
+    @Override
+    public void onAdLoaded(String adType, String adId) {
+
+    }
+
+    @Override
+    public void onAdClosed(String adType, String adId) {
+
+    }
+
+    @Override
+    public void onAdOpened(String adType, String adId) {
+
+    }
+
+    @Override
+    public void onAdEarnedReward(String adType, String adId, int rewardAmount) {
+
     }
 }
