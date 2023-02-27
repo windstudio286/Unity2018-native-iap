@@ -3,6 +3,8 @@ package vn.vplay.sdk.t000a;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.view.DisplayCutout;
 import android.graphics.Rect;
@@ -10,6 +12,14 @@ import android.graphics.Rect;
 import java.util.List;
 
 public class Utils {
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null)
+            return false;
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return (netInfo != null && netInfo.isConnected());
+    }
+
     public static int[] getSafeInsets(Activity activity) {
         DisplayCutout displayCutout;
         List<Rect> rects;

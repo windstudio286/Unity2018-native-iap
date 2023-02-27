@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
@@ -26,12 +25,10 @@ import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchaseHistoryRecord;
-import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
-import com.android.billingclient.api.QueryPurchaseHistoryParams;
+import com.android.billingclient.api.QueryPurchasesParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
@@ -54,7 +51,6 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.onesignal.OneSignal;
-import com.unity3d.player.UnityPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,20 +92,26 @@ public class KcattaSdk implements PurchasesUpdatedListener {
         return false;
     }
 
-    public void requestPriceProduct2(List<ProductInfo> reqListProduct, String type){
+    public void requestPriceProductV5(List<ProductInfo> reqListProduct, String type){
         if(type.equals(BillingClient.ProductType.INAPP)){
-            requestPriceProduct2(reqListProduct,type,availableInappProducts);
+            requestPriceProductV5(reqListProduct,type,availableInappProducts);
         }
         else if(type.equals(BillingClient.ProductType.SUBS)){
-            requestPriceProduct2(reqListProduct,type,availableSubsProducts);
+            requestPriceProductV5(reqListProduct,type,availableSubsProducts);
         }
     }
 
-    private void requestPriceProduct2(List<ProductInfo> reqListProduct, String type, final List<ProductInfo> availableProducts){
+    private void requestPriceProductV5(List<ProductInfo> reqListProduct, String type,List<ProductInfo> availableProducts){
         if (availableProducts != null) {
             if(availableProducts.size() > 0) {
                 if (gameListener != null) {
-                    gameListener.onGetProductsSuccess(availableProducts);
+                    if(type.equals(BillingClient.ProductType.INAPP)){
+                        gameListener.onGetProductsInAppSuccess(availableProducts);
+                    }
+                    else{
+                        gameListener.onGetProductsSubsSuccess(availableProducts);
+                    }
+
                 }
                 return;
             }
@@ -144,31 +146,48 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                                     Log.d("TAG", "count products: " + productDetailsList.size());
                                     for (ProductDetails item :
                                             productDetailsList) {
-                                        ProductInfo productInfo = new ProductInfo();
-                                        productInfo.setProductDetails(item);
-                                        productInfo.setProductId(item.getProductId());
-                                        productInfo.setProductType(item.getProductType());
-                                        if(item.getProductType().equals(BillingClient.ProductType.INAPP)){
-                                            productInfo.setProductPrice(item.getOneTimePurchaseOfferDetails().getFormattedPrice());
+                                        for(ProductInfo refTtem : reqListProduct){
+                                            if(item.getProductId().equals(refTtem.getProductId())){
+                                                ProductInfo productInfo = new ProductInfo();
+                                                productInfo.clone(refTtem);
+                                                productInfo.setProductDetails(item);
+                                                if(
+                                                        productInfo.getProductType().equals(KcattaConstants.PRODUCT_TYPE_CONSUMABLE) ||
+                                                        productInfo.getProductType().equals(KcattaConstants.PRODUCT_TYPE_NON_CONSUMABLE)
+                                                ){
+                                                    String priceInApp = item.getOneTimePurchaseOfferDetails().getFormattedPrice();
+                                                    productInfo.setProductPrice(priceInApp);
+                                                }
+                                                else{
+                                                    ProductDetails.SubscriptionOfferDetails itemDetail = productInfo.findOfferDetail();
+                                                    Log.d("TAG", "getOfferId: "+itemDetail.getOfferId());
+                                                    Log.d("TAG", "getBasePlanId: "+itemDetail.getBasePlanId());
+                                                    String priceInApp = itemDetail.getPricingPhases().getPricingPhaseList().get(0).getFormattedPrice();
+                                                    Log.d("TAG", "priceInApp: "+priceInApp);
+                                                    productInfo.setProductPrice(priceInApp);
+                                                }
+                                                productInfo.setProductName(item.getTitle());
+                                                productInfo.setProductDescription(item.getDescription());
+                                                availableProducts.add(productInfo);
+                                            }
                                         }
-                                        else{
-                                            productInfo.setProductPrice(item.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().get(0).getFormattedPrice());
-                                        }
-                                        productInfo.setProductName(item.getTitle());
-                                        productInfo.setProductDescription(item.getDescription());
-                                        Log.d("TAG", item.toString());
-                                        availableProducts.add(productInfo);
+
                                     }
                                 }
                                 Log.d("TAG", "list add count products: " + availableProducts.size());
                                 if (gameListener != null) {
-                                    gameListener.onGetProductsSuccess(availableProducts);
+                                    if(type.equals(BillingClient.ProductType.INAPP)){
+                                        gameListener.onGetProductsInAppSuccess(availableProducts);
+                                    }
+                                    else{
+                                        gameListener.onGetProductsSubsSuccess(availableProducts);
+                                    }
                                 }
                             }
                             else{
                                 Log.d("TAG", "error to get products: " + availableProducts.size());
                                 if (gameListener != null) {
-                                    gameListener.onGetProductError(new Error(billingResult.getDebugMessage()));
+                                    gameListener.onGetProductError(type,new Error(billingResult.getDebugMessage()));
                                 }
                             }
                         }
@@ -177,11 +196,11 @@ public class KcattaSdk implements PurchasesUpdatedListener {
         }
     }
 
-    public void requestPriceProduct(List<ProductInfo> reqListProduct){
+    public void requestPriceProductV4(List<ProductInfo> reqListProduct){
         if (availableInappProducts != null) {
             if(availableInappProducts.size() > 0) {
                 if (gameListener != null) {
-                    gameListener.onGetProductsSuccess(availableInappProducts);
+                    gameListener.onGetProductsInAppSuccess(availableInappProducts);
                 }
                 return;
             }
@@ -224,13 +243,13 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                         }
                         Log.d("TAG", "list add count products: " + availableInappProducts.size());
                         if (gameListener != null) {
-                            gameListener.onGetProductsSuccess(availableInappProducts);
+                            gameListener.onGetProductsInAppSuccess(availableInappProducts);
                         }
                     }
                     else{
                         Log.d("TAG", "error to get products: " + availableInappProducts.size());
                         if (gameListener != null) {
-                            gameListener.onGetProductError(new Error(billingResult.getDebugMessage()));
+                            gameListener.onGetProductError(BillingClient.SkuType.INAPP,new Error(billingResult.getDebugMessage()));
                         }
                     }
                 }
@@ -293,9 +312,6 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                 // The BillingClient is ready. You can query purchases here.
                 Log.d(TAG, "onBillingSetupFinished");
                 Log.i(TAG, "try query iap");
-                if (billingClient != null && billingClient.isReady()) {
-                    queryPurchase();
-                }
             }
         }
     };
@@ -335,7 +351,66 @@ public class KcattaSdk implements PurchasesUpdatedListener {
         }
     }
 
-    public void payProduct2(String productId, String type){
+    /**
+     * This function to upgrade or downgrade payment
+     * @param newProductId
+     * @param oldProductId
+     */
+    public void updatePayV5(String newProductId, String oldProductId) {
+
+        final ProductInfo oldProductInfo = findProductInfo(availableSubsProducts, oldProductId);
+        final ProductInfo newProductInfo = findProductInfo(availableSubsProducts, newProductId);
+        if (oldProductInfo != null && newProductInfo != null) {
+            if (billingClient != null && billingClient.isReady()) {
+                QueryPurchasesParams queryPurchasesParams = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.SUBS).build();
+                billingClient.queryPurchasesAsync(queryPurchasesParams, new PurchasesResponseListener() {
+                    @Override
+                    public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+                        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                            if (list.size() > 0) {
+                                for (int i=0;i<list.size();i++){
+                                    Purchase purchaseItem = list.get(i);
+                                    String productId = purchaseItem.getProducts().get(0);
+                                    if(productId != null && productId.equals(oldProductId)){
+
+                                        List<BillingFlowParams.ProductDetailsParams> productDetailsParamsList = new ArrayList<>();
+                                        //find best offer
+                                        ProductDetails.SubscriptionOfferDetails offerDetail = newProductInfo.findOfferDetail();
+                                        BillingFlowParams.ProductDetailsParams productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
+                                                .setProductDetails(newProductInfo.getProductDetails())
+                                                .setOfferToken(offerDetail.getOfferToken())
+                                                .build();
+                                        productDetailsParamsList.add(productDetailsParams);
+                                        //replace old purchase
+                                        BillingFlowParams.SubscriptionUpdateParams subscriptionUpdateParams = BillingFlowParams.SubscriptionUpdateParams.newBuilder()
+                                                .setOldPurchaseToken(purchaseItem.getPurchaseToken())
+                                                .setReplaceProrationMode(BillingFlowParams.ProrationMode.IMMEDIATE_AND_CHARGE_FULL_PRICE)
+                                                .build();
+
+                                        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                                                .setProductDetailsParamsList(productDetailsParamsList)
+                                                .setSubscriptionUpdateParams(subscriptionUpdateParams)
+                                                .build();
+
+                                        int responseCode = billingClient.launchBillingFlow(hostedActivity, billingFlowParams).getResponseCode();
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+
+    /**
+     * Pay product by product id and type product
+     * @param productId
+     * @param type
+     */
+    public void payProductV5(String productId, String type){
         if(type.equals(BillingClient.ProductType.INAPP)) {
             if (availableInappProducts != null) {
                 ProductInfo product = findProductInfo(availableInappProducts, productId);
@@ -359,7 +434,7 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                     }
                 } else {
                     if (gameListener != null) {
-                        gameListener.onPayProductError(new Error(productId));
+                        gameListener.onPayProductError(KcattaConstants.UN_KNOW,new Error(productId));
                     }
                 }
             }
@@ -370,20 +445,21 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                 if (product != null) {
                     if (billingClient != null && billingClient.isReady()) {
                         List<BillingFlowParams.ProductDetailsParams> productDetailsParamsList = new ArrayList<>();
-                        for ( ProductDetails.SubscriptionOfferDetails i : product.getProductDetails().getSubscriptionOfferDetails()) {
-                            Log.d(TAG, "ProductDetails.SubscriptionOfferDetails: "+i.getOfferToken());
-                            Log.d(TAG, "ProductDetails.SubscriptionOfferDetails: "+i.getOfferId());
-                            Log.d(TAG, "ProductDetails.SubscriptionOfferDetails: "+i.getBasePlanId());
+                        ProductDetails.SubscriptionOfferDetails offerDetail = product.findOfferDetail();
+                        //for ( ProductDetails.SubscriptionOfferDetails i : product.getProductDetails().getSubscriptionOfferDetails()) {
+                            Log.d(TAG, "ProductDetails.SubscriptionOfferDetails: "+offerDetail.getOfferToken());
+                            Log.d(TAG, "ProductDetails.SubscriptionOfferDetails: "+offerDetail.getOfferId());
+                            Log.d(TAG, "ProductDetails.SubscriptionOfferDetails: "+offerDetail.getBasePlanId());
                             Log.d(TAG, "=======");
-                        }
+                        //}
                         BillingFlowParams.ProductDetailsParams productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
                                 .setProductDetails(product.getProductDetails())
-                                .setOfferToken(product.getProductDetails().getSubscriptionOfferDetails().get(1).getOfferToken())
+                                .setOfferToken(offerDetail.getOfferToken())
                                 .build();
                         productDetailsParamsList.add(productDetailsParams);
 
                         BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                                .setObfuscatedProfileId("congtt")
+                                //.setObfuscatedAccountId("congtt")
                                 .setProductDetailsParamsList(productDetailsParamsList)
                                 .build();
                         int responseCode = billingClient.launchBillingFlow(hostedActivity, billingFlowParams).getResponseCode();
@@ -391,14 +467,14 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                     }
                 } else {
                     if (gameListener != null) {
-                        gameListener.onPayProductError(new Error(productId));
+                        gameListener.onPayProductError(KcattaConstants.UN_KNOW,new Error(productId));
                     }
                 }
             }
         }
     }
 
-    public void payProduct(String productId){
+    public void payProductV4(String productId){
         if(availableInappProducts != null){
             ProductInfo product = findProductInfo(availableInappProducts,productId);
             if (product != null) {
@@ -412,37 +488,54 @@ public class KcattaSdk implements PurchasesUpdatedListener {
             }
             else {
                 if (gameListener != null) {
-                    gameListener.onPayProductError(new Error(productId));
+                    gameListener.onPayProductError(KcattaConstants.UN_KNOW,new Error(productId));
                 }
             }
         }
     }
 
-    private void queryPurchase(){
+    public void queryPurchase(String productType){
+        if(!Utils.isOnline(hostedActivity)){
+            if (gameListener != null) {
+                gameListener.onQueryError(KcattaConstants.NO_INTERNET_CONNECTION,new Error("No Internet Connection"));
+            }
+            return;
+        }
         if(billingClient != null && billingClient.isReady()){
-            billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP, new PurchasesResponseListener() {
+            QueryPurchasesParams queryPurchasesParams = QueryPurchasesParams.newBuilder().setProductType(productType).build();
+            billingClient.queryPurchasesAsync(queryPurchasesParams, new PurchasesResponseListener() {
                 @Override
-                public void onQueryPurchasesResponse(BillingResult billingResult, List<Purchase> purchases) {
-                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
-                            && purchases != null) {
-                        for (Purchase purchase : purchases) {
-                            handleQueryPurchase(purchase);
+                public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        if(list.size() > 0) {
+                            for (int i = 0; i < list.size(); i++) {
+                                Purchase item = list.get(i);
+                                boolean lastItem = false;
+                                if (i == list.size() - 1) {
+                                    lastItem = true;
+                                }
+                                if (productType.equals(BillingClient.ProductType.INAPP)) {
+                                    if (gameListener != null) {
+                                        gameListener.onQueryProductInApp(item, lastItem);
+                                    }
+                                } else if (productType.equals(BillingClient.ProductType.SUBS)) {
+                                    if (gameListener != null) {
+                                        gameListener.onQueryProductSubs(item, lastItem);
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            if (gameListener != null) {
+                                gameListener.onQueryError(KcattaConstants.QUERY_PRODUCT_NOT_AVAILABLE,new Error("Product is not available"));
+                            }
                         }
                     }
-                }
-            });
-        }
-    }
-
-    public void queryHistoryPurchase(){
-        if(billingClient != null && billingClient.isReady()){
-            QueryPurchaseHistoryParams queryPurchaseHistoryParams = QueryPurchaseHistoryParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build();
-            billingClient.queryPurchaseHistoryAsync(queryPurchaseHistoryParams, new PurchaseHistoryResponseListener() {
-                @Override
-                public void onPurchaseHistoryResponse(@NonNull BillingResult billingResult, @Nullable List<PurchaseHistoryRecord> list) {
-                    if(list == null) return;
-                    for (PurchaseHistoryRecord item: list){
-
+                    else{
+                        Log.d(TAG,"billingResult.getResponseCode():" +billingResult.getResponseCode());
+                        if (gameListener != null) {
+                            gameListener.onQueryError(billingResult.getResponseCode(),new Error(billingResult.getDebugMessage()));
+                        }
                     }
                 }
             });
@@ -470,31 +563,14 @@ public class KcattaSdk implements PurchasesUpdatedListener {
         }
     }
 
-    private void handleQueryPurchase(Purchase purchase) {
-        Log.d(TAG, "handleQueryPurchase");
-        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
-            consumeAsync(purchase, purchase.getPurchaseToken());
-
-        } else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
-            if (gameListener != null) {
-                gameListener.onPayProductError(new Error("Có lỗi trong quá trình thanh toán"));
-            }
-
-        } else {
-            if (gameListener != null) {
-                gameListener.onPayProductError(new Error("Có lỗi trong quá trình thanh toán"));
-            }
-            for (String productId : purchase.getSkus()
-            ) {
-            }
-        }
-    }
-
     private void handlePurchase(Purchase purchase) {
         Log.d(TAG, "handlePurchase");
         if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
             String productID = purchase.getProducts().get(0);
             ProductInfo productInfo = findProductInfo(availableInappProducts,productID);
+            if(productInfo == null){
+                productInfo = findProductInfo(availableSubsProducts,productID);
+            }
             if(productInfo.getProductType().equals(KcattaConstants.PRODUCT_TYPE_CONSUMABLE)) {
                 consumeAsync(purchase, purchase.getPurchaseToken());
             }
@@ -504,12 +580,12 @@ public class KcattaSdk implements PurchasesUpdatedListener {
 
         } else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
             if (gameListener != null) {
-                gameListener.onPayProductError(new Error("Có lỗi trong quá trình thanh toán"));
+                gameListener.onPayProductError(KcattaConstants.UN_KNOW,new Error("Có lỗi trong quá trình thanh toán"));
             }
 
         } else {
             if (gameListener != null) {
-                gameListener.onPayProductError(new Error("Có lỗi trong quá trình thanh toán"));
+                gameListener.onPayProductError(KcattaConstants.UN_KNOW,new Error("Có lỗi trong quá trình thanh toán"));
             }
             for (String productId : purchase.getSkus()
             ) {
@@ -587,7 +663,7 @@ public class KcattaSdk implements PurchasesUpdatedListener {
             if(purchase.getSkus().size() > 0){
                 productId = purchase.getSkus().get(0);
             }
-            gameListener.onPayProductSuccess(productId);
+            gameListener.onPayProductSuccess(purchase,productId);
         }
     }
     public void destroySDK(){

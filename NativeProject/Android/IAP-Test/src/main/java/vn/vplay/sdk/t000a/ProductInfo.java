@@ -21,6 +21,13 @@ public class ProductInfo {
     @SerializedName("productPrice")
     @Expose
     private String productPrice;
+    @SerializedName("preferOfferId")
+    @Expose
+    private String preferOfferId;
+    @SerializedName("preferBasePlanId")
+    @Expose
+    private String preferBasePlanId;
+
     private SkuDetails skuDetails;
     private ProductDetails productDetails;
 
@@ -79,5 +86,56 @@ public class ProductInfo {
 
     public void setProductDetails(ProductDetails productDetails) {
         this.productDetails = productDetails;
+    }
+
+    public String getPreferOfferId() {
+        return preferOfferId;
+    }
+
+    public void setPreferOfferId(String preferOfferId) {
+        this.preferOfferId = preferOfferId;
+    }
+
+
+    public String getPreferBasePlanId() {
+        return preferBasePlanId;
+    }
+
+    public void setPreferBasePlanId(String preferBaseId) {
+        this.preferBasePlanId = preferBaseId;
+    }
+
+    public void clone(ProductInfo copyObj){
+        this.productType = copyObj.getProductType();
+        this.productId = copyObj.getProductId();
+        this.productName = copyObj.getProductName();
+        this.productDescription = copyObj.getProductDescription();
+        this.productPrice = copyObj.getProductPrice();
+        this.preferOfferId = copyObj.getPreferOfferId();
+        this.preferBasePlanId = copyObj.getPreferBasePlanId();
+        this.productDetails = copyObj.getProductDetails();
+        this.skuDetails = copyObj.getSkuDetails();
+    }
+
+    public ProductDetails.SubscriptionOfferDetails findOfferDetail(){
+        ProductDetails.SubscriptionOfferDetails item= null;
+        if(productType.equals(KcattaConstants.PRODUCT_TYPE_SUBS) && productDetails!= null && productDetails.getSubscriptionOfferDetails().size()> 0) {
+            if (preferBasePlanId == null || (preferBasePlanId != null && preferBasePlanId.isEmpty())) {
+                item = productDetails.getSubscriptionOfferDetails().get(0);
+            }
+            if(preferBasePlanId != null && !preferBasePlanId.isEmpty()){
+                for(int i = 0;i<productDetails.getSubscriptionOfferDetails().size();i++){
+                    ProductDetails.SubscriptionOfferDetails curItem = productDetails.getSubscriptionOfferDetails().get(i);
+                    if(curItem.getBasePlanId().equals(preferBasePlanId)){
+                        item = curItem;
+                        if((curItem.getOfferId() != null && curItem.getOfferId().equals(preferOfferId))){
+                            item = curItem;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return item;
     }
 }

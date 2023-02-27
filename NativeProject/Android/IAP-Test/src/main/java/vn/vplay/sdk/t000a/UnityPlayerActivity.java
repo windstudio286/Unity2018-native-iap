@@ -1,11 +1,10 @@
 package vn.vplay.sdk.t000a;
 
 import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.Purchase;
 import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.onesignal.OneSignal;
 import com.unity3d.player.*;
 import android.app.Activity;
 import android.content.Intent;
@@ -55,13 +54,18 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     hashMapCmd.put(key,jsonObject);
                 }
                 if(key.equals(KcattaCmd.GET_PRODUCT)){
-                    /*List<ProductInfo> productInfoList = new ArrayList<>();
+                    List<ProductInfo> productInfoList = new ArrayList<>();
                     ProductInfo prod1 = new ProductInfo();
                     prod1.setProductId("vn.vplay.sdk.t000a.demoproduct1");
+                    prod1.setProductType(KcattaConstants.PRODUCT_TYPE_CONSUMABLE);
                     ProductInfo prod2 = new ProductInfo();
                     prod2.setProductId("vn.vplay.sdk.t000a.demoproduct2");
+                    prod2.setProductType(KcattaConstants.PRODUCT_TYPE_CONSUMABLE);
                     ProductInfo prod3 = new ProductInfo();
                     prod3.setProductId("vn.vplay.sdk.t000a.subs1");
+                    prod3.setPreferBasePlanId("basic-2-auto-renewal");
+                    //prod3.setPreferOfferId("offer-vip-user-week-custom");
+                    prod3.setProductType(KcattaConstants.PRODUCT_TYPE_SUBS);
 
                     ProductInfo prod4 = new ProductInfo();
                     prod4.setProductId("vn.vplay.sdk.t000a.removeads");
@@ -70,17 +74,16 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     //productInfoList.add(prod2);
                     productInfoList.add(prod3);
                     productInfoList.add(prod4);
-                    KcattaSdk.getInstance().requestPriceProduct2(productInfoList,BillingClient.ProductType.INAPP);*/
-                    KcattaSdk.getInstance().addOrCreateBannerAd("ca-app-pub-3940256099942544/6300978111","bottom");
+                    KcattaSdk.getInstance().requestPriceProductV5(productInfoList,BillingClient.ProductType.SUBS);
 
                 }
                 if(key.equals(KcattaCmd.PAY_PRODUCT)){
-                    /*String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
+                    String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
                     value = "vn.vplay.sdk.t000a.subs1";
-                    value = "vn.vplay.sdk.t000a.removeads";
-                    KcattaSdk.getInstance().payProduct2(value,BillingClient.ProductType.INAPP);*/
-                    //KcattaSdk.GetInstance().queryHistoryPurchase();
-                    KcattaSdk.getInstance().showBannerAd();
+                    //value = "vn.vplay.sdk.t000a.removeads";
+                    //KcattaSdk.getInstance().payProductV5(value,BillingClient.ProductType.SUBS);
+                    KcattaSdk.getInstance().queryPurchase(BillingClient.ProductType.SUBS);
+
                 }
             }
         } catch (JSONException e) {
@@ -210,7 +213,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     /*API12*/ public boolean onGenericMotionEvent(MotionEvent event)  { return mUnityPlayer.injectEvent(event); }
 
     @Override
-    public void onPayProductSuccess(String productId) {
+    public void onPayProductSuccess(Purchase item,String productId) {
         if(hashMapCmd != null){
             JSONObject json = hashMapCmd.get(KcattaCmd.PAY_PRODUCT);
             if(json != null){
@@ -243,7 +246,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     }
 
     @Override
-    public void onPayProductError(Error error) {
+    public void onPayProductError(int errorCode,Error error) {
         if(hashMapCmd != null){
             JSONObject json = hashMapCmd.get(KcattaCmd.PAY_PRODUCT);
             if(json != null){
@@ -276,7 +279,12 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     }
 
     @Override
-    public void onGetProductsSuccess(List<ProductInfo> products) {
+    public void onGetProductsSubsSuccess(List<ProductInfo> products) {
+
+    }
+
+    @Override
+    public void onGetProductsInAppSuccess(List<ProductInfo> products) {
         if(hashMapCmd != null){
             JSONObject json = hashMapCmd.get(KcattaCmd.GET_PRODUCT);
             if(json != null){
@@ -310,7 +318,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     }
 
     @Override
-    public void onGetProductError(Error error) {
+    public void onGetProductError(String productType,Error error) {
         if(hashMapCmd != null){
             JSONObject json = hashMapCmd.get(KcattaCmd.PAY_PRODUCT);
             if(json != null){
@@ -365,5 +373,30 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     @Override
     public void onAdEarnedReward(String adType, String adId, int rewardAmount) {
 
+    }
+
+    @Override
+    public void onQueryProductInApp(Purchase item, boolean finishedQuery) {
+        Log.i("BEM","onQueryProductInApp");
+        Log.i("BEM","item:" + item.getProducts().get(0));
+        Log.i("BEM","time:" + item.getPurchaseTime());
+        Log.i("BEM","orderId:" + item.getOrderId());
+        Log.i("BEM","getObfuscatedProfileId:" + item.getAccountIdentifiers().getObfuscatedProfileId());
+        Log.i("BEM","getObfuscatedAccountId:" + item.getAccountIdentifiers().getObfuscatedAccountId());
+        Log.i("BEM","getOriginalJson:" + item.getOriginalJson());
+        Log.i("BEM","finishedQuery:" + finishedQuery);
+    }
+
+    @Override
+    public void onQueryProductSubs(Purchase item, boolean finishedQuery) {
+        Log.i("BEM","onQueryProductSubs");
+        Log.i("BEM","item:" + item.getProducts().get(0));
+        Log.i("BEM","finishedQuery:" + finishedQuery);
+    }
+
+    @Override
+    public void onQueryError(int errCode,Error error) {
+        Log.i("BEM","errCode: "+errCode);
+        Log.i("BEM","onQueryError: "+error.getMessage());
     }
 }
