@@ -151,7 +151,7 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                                                 ProductInfo productInfo = new ProductInfo();
                                                 productInfo.clone(refTtem);
                                                 productInfo.setProductDetails(item);
-                                                if(
+                                                /*if(
                                                         productInfo.getProductType().equals(KcattaConstants.PRODUCT_TYPE_CONSUMABLE) ||
                                                         productInfo.getProductType().equals(KcattaConstants.PRODUCT_TYPE_NON_CONSUMABLE)
                                                 ){
@@ -165,7 +165,7 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                                                     String priceInApp = itemDetail.getPricingPhases().getPricingPhaseList().get(0).getFormattedPrice();
                                                     Log.d("TAG", "priceInApp: "+priceInApp);
                                                     productInfo.setProductPrice(priceInApp);
-                                                }
+                                                }*/
                                                 productInfo.setProductName(item.getTitle());
                                                 productInfo.setProductDescription(item.getDescription());
                                                 availableProducts.add(productInfo);
@@ -356,10 +356,12 @@ public class KcattaSdk implements PurchasesUpdatedListener {
      * @param newProductId
      * @param oldProductId
      */
-    public void updatePayV5(String newProductId, String oldProductId) {
+    public void updatePayV5(String newProductId,String newBasePlanId,String newOfferId,String oldProductId) {
 
         final ProductInfo oldProductInfo = findProductInfo(availableSubsProducts, oldProductId);
         final ProductInfo newProductInfo = findProductInfo(availableSubsProducts, newProductId);
+        /*newProductInfo.setPreferOfferId(newOfferId);
+        newProductInfo.setPreferBasePlanId(newBasePlanId);*/
         if (oldProductInfo != null && newProductInfo != null) {
             if (billingClient != null && billingClient.isReady()) {
                 QueryPurchasesParams queryPurchasesParams = QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.SUBS).build();
@@ -375,7 +377,7 @@ public class KcattaSdk implements PurchasesUpdatedListener {
 
                                         List<BillingFlowParams.ProductDetailsParams> productDetailsParamsList = new ArrayList<>();
                                         //find best offer
-                                        ProductDetails.SubscriptionOfferDetails offerDetail = newProductInfo.findOfferDetail();
+                                        ProductDetails.SubscriptionOfferDetails offerDetail = newProductInfo.findOfferDetail(newBasePlanId,newOfferId);
                                         BillingFlowParams.ProductDetailsParams productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
                                                 .setProductDetails(newProductInfo.getProductDetails())
                                                 .setOfferToken(offerDetail.getOfferToken())
@@ -404,13 +406,14 @@ public class KcattaSdk implements PurchasesUpdatedListener {
         }
     }
 
-
     /**
      * Pay product by product id and type product
      * @param productId
-     * @param type
+     * @param preferBasePlanId
+     * @param preferOfferId
+     * @param type : BillingClient.ProductType.INAPP or BillingClient.ProductType.SUBS
      */
-    public void payProductV5(String productId, String type){
+    public void payProductV5(String productId,String preferBasePlanId,String preferOfferId, String type){
         if(type.equals(BillingClient.ProductType.INAPP)) {
             if (availableInappProducts != null) {
                 ProductInfo product = findProductInfo(availableInappProducts, productId);
@@ -445,7 +448,7 @@ public class KcattaSdk implements PurchasesUpdatedListener {
                 if (product != null) {
                     if (billingClient != null && billingClient.isReady()) {
                         List<BillingFlowParams.ProductDetailsParams> productDetailsParamsList = new ArrayList<>();
-                        ProductDetails.SubscriptionOfferDetails offerDetail = product.findOfferDetail();
+                        ProductDetails.SubscriptionOfferDetails offerDetail = product.findOfferDetail(preferBasePlanId,preferOfferId);
                         //for ( ProductDetails.SubscriptionOfferDetails i : product.getProductDetails().getSubscriptionOfferDetails()) {
                             Log.d(TAG, "ProductDetails.SubscriptionOfferDetails: "+offerDetail.getOfferToken());
                             Log.d(TAG, "ProductDetails.SubscriptionOfferDetails: "+offerDetail.getOfferId());

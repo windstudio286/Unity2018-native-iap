@@ -63,17 +63,18 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     prod2.setProductType(KcattaConstants.PRODUCT_TYPE_CONSUMABLE);
                     ProductInfo prod3 = new ProductInfo();
                     prod3.setProductId("vn.vplay.sdk.t000a.subs1");
-                    prod3.setPreferBasePlanId("basic-2-auto-renewal");
-                    //prod3.setPreferOfferId("offer-vip-user-week-custom");
                     prod3.setProductType(KcattaConstants.PRODUCT_TYPE_SUBS);
-
                     ProductInfo prod4 = new ProductInfo();
                     prod4.setProductId("vn.vplay.sdk.t000a.removeads");
                     prod4.setProductType(KcattaConstants.PRODUCT_TYPE_NON_CONSUMABLE);
+                    ProductInfo prod5 = new ProductInfo();
+                    prod5.setProductId("vn.vplay.sdk.t000a.subs2");
+                    prod5.setProductType(KcattaConstants.PRODUCT_TYPE_SUBS);
                     //productInfoList.add(prod1);
                     //productInfoList.add(prod2);
                     productInfoList.add(prod3);
                     productInfoList.add(prod4);
+                    productInfoList.add(prod5);
                     KcattaSdk.getInstance().requestPriceProductV5(productInfoList,BillingClient.ProductType.SUBS);
 
                 }
@@ -82,8 +83,19 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     value = "vn.vplay.sdk.t000a.subs1";
                     //value = "vn.vplay.sdk.t000a.removeads";
                     //KcattaSdk.getInstance().payProductV5(value,BillingClient.ProductType.SUBS);
-                    KcattaSdk.getInstance().queryPurchase(BillingClient.ProductType.SUBS);
+                    KcattaSdk.getInstance().payProductV5("vn.vplay.sdk.t000a.subs1","basic-2-auto-renewal","offer-vip-user-week-custom",BillingClient.ProductType.SUBS);
 
+                }
+                if(key.equals("UPGRADE_PRODUCT")){
+                    String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
+                    value = "vn.vplay.sdk.t000a.subs1";
+                    //value = "vn.vplay.sdk.t000a.removeads";
+                    //KcattaSdk.getInstance().payProductV5(value,BillingClient.ProductType.SUBS);
+                    KcattaSdk.getInstance().updatePayV5("vn.vplay.sdk.t000a.subs1","basic-2-auto-renewal","offer-vip-user-week-custom","vn.vplay.sdk.t000a.subs2");
+
+                }
+                if(key.equals("DOWNGRADE_PRODUCT")){
+                    KcattaSdk.getInstance().queryPurchase(BillingClient.ProductType.SUBS);
                 }
             }
         } catch (JSONException e) {
@@ -214,6 +226,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
 
     @Override
     public void onPayProductSuccess(Purchase item,String productId) {
+        Log.i("BEM","onPayProductSuccess productId: "+productId);
         if(hashMapCmd != null){
             JSONObject json = hashMapCmd.get(KcattaCmd.PAY_PRODUCT);
             if(json != null){

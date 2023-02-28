@@ -19,6 +19,54 @@ public class Main : MonoBehaviour
         
     }
 
+    public void onBtnDowngradeClick()
+    {
+        StringBuilder sb = new StringBuilder();
+        JsonWriter writer = new JsonWriter(sb);
+        writer.WriteObjectStart();
+        writer.WritePropertyName("receivedObject");
+        writer.Write(this.gameObject.name);
+        writer.WritePropertyName("receivedFunc");
+        writer.Write("setTextFromNative");
+        writer.WritePropertyName("key");
+        writer.Write("DOWNGRADE_PRODUCT");
+        writer.WritePropertyName("value");
+        writer.Write("vn.vplay.sdk.t000a.demoproduct1");
+        writer.WriteObjectEnd();
+        Debug.Log("onBtnPayClick:" + sb.ToString());
+#if UNITY_ANDROID
+
+        AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject UnityPlayerNativeActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
+        UnityPlayerNativeActivity.Call("sendDataFromUnity", sb.ToString());
+
+#endif
+    }
+
+        public void onBtnUpgradeClick()
+    {
+        StringBuilder sb = new StringBuilder();
+        JsonWriter writer = new JsonWriter(sb);
+        writer.WriteObjectStart();
+        writer.WritePropertyName("receivedObject");
+        writer.Write(this.gameObject.name);
+        writer.WritePropertyName("receivedFunc");
+        writer.Write("setTextFromNative");
+        writer.WritePropertyName("key");
+        writer.Write("UPGRADE_PRODUCT");
+        writer.WritePropertyName("value");
+        writer.Write("vn.vplay.sdk.t000a.demoproduct1");
+        writer.WriteObjectEnd();
+        Debug.Log("onBtnPayClick:" + sb.ToString());
+#if UNITY_ANDROID
+
+        AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject UnityPlayerNativeActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
+        UnityPlayerNativeActivity.Call("sendDataFromUnity", sb.ToString());
+
+#endif
+    }
+
     public void onBtnPayClick()
     {
         StringBuilder sb = new StringBuilder();

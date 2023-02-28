@@ -21,12 +21,12 @@ public class ProductInfo {
     @SerializedName("productPrice")
     @Expose
     private String productPrice;
-    @SerializedName("preferOfferId")
+    /*@SerializedName("preferOfferId")
     @Expose
     private String preferOfferId;
     @SerializedName("preferBasePlanId")
     @Expose
-    private String preferBasePlanId;
+    private String preferBasePlanId;*/
 
     private SkuDetails skuDetails;
     private ProductDetails productDetails;
@@ -56,17 +56,30 @@ public class ProductInfo {
         this.productDescription = productDescription;
     }
 
-    public String getProductPrice() {
-        return productPrice;
+    public String getProductPrice(String preferBasePlanId,String preferOfferId) {
+        if(productType.equals(KcattaConstants.PRODUCT_TYPE_NON_CONSUMABLE) || productType.equals(KcattaConstants.PRODUCT_TYPE_CONSUMABLE)){
+            return this.productDetails.getOneTimePurchaseOfferDetails().getFormattedPrice();
+        }
+        else{
+            ProductDetails.SubscriptionOfferDetails item = findOfferDetail(preferBasePlanId,preferOfferId);
+            if(item != null) {
+                return item.getPricingPhases().getPricingPhaseList().get(0).getFormattedPrice();
+            }
+            else{
+                return  null;
+            }
+        }
     }
 
     public void setProductPrice(String productPrice) {
         this.productPrice = productPrice;
+
     }
 
     public String getProductType() {
         return productType;
     }
+
 
     public void setProductType(String productType) {
         this.productType = productType;
@@ -88,36 +101,16 @@ public class ProductInfo {
         this.productDetails = productDetails;
     }
 
-    public String getPreferOfferId() {
-        return preferOfferId;
-    }
-
-    public void setPreferOfferId(String preferOfferId) {
-        this.preferOfferId = preferOfferId;
-    }
-
-
-    public String getPreferBasePlanId() {
-        return preferBasePlanId;
-    }
-
-    public void setPreferBasePlanId(String preferBaseId) {
-        this.preferBasePlanId = preferBaseId;
-    }
-
     public void clone(ProductInfo copyObj){
         this.productType = copyObj.getProductType();
         this.productId = copyObj.getProductId();
         this.productName = copyObj.getProductName();
         this.productDescription = copyObj.getProductDescription();
-        this.productPrice = copyObj.getProductPrice();
-        this.preferOfferId = copyObj.getPreferOfferId();
-        this.preferBasePlanId = copyObj.getPreferBasePlanId();
         this.productDetails = copyObj.getProductDetails();
         this.skuDetails = copyObj.getSkuDetails();
     }
 
-    public ProductDetails.SubscriptionOfferDetails findOfferDetail(){
+    public ProductDetails.SubscriptionOfferDetails findOfferDetail(String preferBasePlanId,String preferOfferId){
         ProductDetails.SubscriptionOfferDetails item= null;
         if(productType.equals(KcattaConstants.PRODUCT_TYPE_SUBS) && productDetails!= null && productDetails.getSubscriptionOfferDetails().size()> 0) {
             if (preferBasePlanId == null || (preferBasePlanId != null && preferBasePlanId.isEmpty())) {
