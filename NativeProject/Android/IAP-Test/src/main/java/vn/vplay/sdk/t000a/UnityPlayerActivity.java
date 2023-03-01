@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -75,8 +76,15 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     productInfoList.add(prod3);
                     productInfoList.add(prod4);
                     productInfoList.add(prod5);
-                    KcattaSdk.getInstance().requestPriceProductV5(productInfoList,BillingClient.ProductType.SUBS);
-
+                    //KcattaSdk.getInstance().requestPriceProductV5(productInfoList,BillingClient.ProductType.SUBS);
+                    this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //KcattaSdk.getInstance().addOrCreateBannerAd("ca-app-pub-3940256099942544/6300978111","bottom");
+                            //KcattaSdk.getInstance().createInterstitalAd("ca-app-pub-3940256099942544/8691691433");
+                            KcattaSdk.getInstance().createRewardedAd("ca-app-pub-3940256099942544/5224354917");
+                        }
+                    });
                 }
                 if(key.equals(KcattaCmd.PAY_PRODUCT)){
                     String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
@@ -89,13 +97,24 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                 if(key.equals("UPGRADE_PRODUCT")){
                     String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
                     value = "vn.vplay.sdk.t000a.subs1";
-                    //value = "vn.vplay.sdk.t000a.removeads";
-                    //KcattaSdk.getInstance().payProductV5(value,BillingClient.ProductType.SUBS);
-                    KcattaSdk.getInstance().updatePayV5("vn.vplay.sdk.t000a.subs1","basic-2-auto-renewal","offer-vip-user-week-custom","vn.vplay.sdk.t000a.subs2");
-
+                    //KcattaSdk.getInstance().updatePayV5("vn.vplay.sdk.t000a.subs1","basic-2-auto-renewal","offer-vip-user-week-custom","vn.vplay.sdk.t000a.subs2");
+                    this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            KcattaSdk.getInstance().hideBannerAd();
+                        }
+                    });
                 }
                 if(key.equals("DOWNGRADE_PRODUCT")){
-                    KcattaSdk.getInstance().queryPurchase(BillingClient.ProductType.SUBS);
+                    //KcattaSdk.getInstance().queryPurchase(BillingClient.ProductType.SUBS);
+                    this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //KcattaSdk.getInstance().showBannerAd();
+                            //KcattaSdk.getInstance().showIntestitialAd();
+                            KcattaSdk.getInstance().showRewardedAd();
+                        }
+                    });
                 }
             }
         } catch (JSONException e) {
@@ -365,27 +384,32 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
 
     @Override
     public void onAdFailedToLoad(String adType, String adId, AdError error) {
-
+        Log.i("BEM","onAdFailedToLoad adType: "+adType);
+        Log.i("BEM","onAdFailedToLoad adId: "+adId);
     }
 
     @Override
     public void onAdLoaded(String adType, String adId) {
-
+        Log.i("BEM","onAdLoaded adType: "+adType);
+        Log.i("BEM","onAdLoaded adId: "+adId);
     }
 
     @Override
     public void onAdClosed(String adType, String adId) {
-
+        Log.i("BEM","onAdClosed adType: "+adType);
+        Log.i("BEM","onAdClosed adId: "+adId);
     }
 
     @Override
     public void onAdOpened(String adType, String adId) {
-
+        Log.i("BEM","onAdOpened adType: "+adType);
+        Log.i("BEM","onAdOpened adId: "+adId);
     }
 
     @Override
     public void onAdEarnedReward(String adType, String adId, int rewardAmount) {
-
+        Log.i("BEM","onAdEarnedReward adType: "+adType);
+        Log.i("BEM","onAdEarnedReward adId: "+adId);
     }
 
     @Override
