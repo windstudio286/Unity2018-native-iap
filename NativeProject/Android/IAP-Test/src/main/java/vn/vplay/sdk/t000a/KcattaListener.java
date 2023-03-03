@@ -17,7 +17,7 @@ public interface KcattaListener {
     void onAdClosed(String adType,String adId);
     void onAdOpened(String adType,String adId);
     void onAdEarnedReward(String adType, String adId, int rewardAmount);
-    void onQueryProductInApp(Purchase item, boolean finishedQuery);
-    void onQueryProductSubs(Purchase item, boolean finishedQuery);
+    void onQueryProductInApp(List<Purchase> items);
+    void onQueryProductSubs(List<Purchase> items);
     void onQueryError(int errCode,Error error);
 }

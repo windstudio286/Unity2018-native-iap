@@ -71,20 +71,20 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     ProductInfo prod5 = new ProductInfo();
                     prod5.setProductId("vn.vplay.sdk.t000a.subs2");
                     prod5.setProductType(KcattaConstants.PRODUCT_TYPE_SUBS);
-                    //productInfoList.add(prod1);
-                    //productInfoList.add(prod2);
+                    productInfoList.add(prod1);
+                    productInfoList.add(prod2);
                     productInfoList.add(prod3);
                     productInfoList.add(prod4);
                     productInfoList.add(prod5);
-                    //KcattaSdk.getInstance().requestPriceProductV5(productInfoList,BillingClient.ProductType.SUBS);
-                    this.runOnUiThread(new Runnable() {
+                    KcattaSdk.getInstance().requestPriceProductV5(productInfoList,BillingClient.ProductType.INAPP);
+                    /*this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             //KcattaSdk.getInstance().addOrCreateBannerAd("ca-app-pub-3940256099942544/6300978111","bottom");
                             //KcattaSdk.getInstance().createInterstitalAd("ca-app-pub-3940256099942544/8691691433");
                             KcattaSdk.getInstance().createRewardedAd("ca-app-pub-3940256099942544/5224354917");
                         }
-                    });
+                    });*/
                 }
                 if(key.equals(KcattaCmd.PAY_PRODUCT)){
                     String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
@@ -413,22 +413,24 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     }
 
     @Override
-    public void onQueryProductInApp(Purchase item, boolean finishedQuery) {
-        Log.i("BEM","onQueryProductInApp");
-        Log.i("BEM","item:" + item.getProducts().get(0));
-        Log.i("BEM","time:" + item.getPurchaseTime());
-        Log.i("BEM","orderId:" + item.getOrderId());
-        Log.i("BEM","getObfuscatedProfileId:" + item.getAccountIdentifiers().getObfuscatedProfileId());
-        Log.i("BEM","getObfuscatedAccountId:" + item.getAccountIdentifiers().getObfuscatedAccountId());
-        Log.i("BEM","getOriginalJson:" + item.getOriginalJson());
-        Log.i("BEM","finishedQuery:" + finishedQuery);
+    public void onQueryProductInApp(List<Purchase> items) {
+        for(Purchase item : items) {
+            Log.i("BEM", "onQueryProductInApp");
+            Log.i("BEM", "item:" + item.getProducts().get(0));
+            Log.i("BEM", "time:" + item.getPurchaseTime());
+            Log.i("BEM", "orderId:" + item.getOrderId());
+            Log.i("BEM", "getObfuscatedProfileId:" + item.getAccountIdentifiers().getObfuscatedProfileId());
+            Log.i("BEM", "getObfuscatedAccountId:" + item.getAccountIdentifiers().getObfuscatedAccountId());
+            Log.i("BEM", "getOriginalJson:" + item.getOriginalJson());
+        }
     }
 
     @Override
-    public void onQueryProductSubs(Purchase item, boolean finishedQuery) {
-        Log.i("BEM","onQueryProductSubs");
-        Log.i("BEM","item:" + item.getProducts().get(0));
-        Log.i("BEM","finishedQuery:" + finishedQuery);
+    public void onQueryProductSubs(List<Purchase> items) {
+        for(Purchase item : items) {
+            Log.i("BEM", "onQueryProductSubs");
+            Log.i("BEM", "item:" + item.getProducts().get(0));
+        }
     }
 
     @Override

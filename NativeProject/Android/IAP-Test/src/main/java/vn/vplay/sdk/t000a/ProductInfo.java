@@ -21,12 +21,10 @@ public class ProductInfo {
     @SerializedName("productPrice")
     @Expose
     private String productPrice;
-    /*@SerializedName("preferOfferId")
+    @SerializedName("productAmount")
     @Expose
-    private String preferOfferId;
-    @SerializedName("preferBasePlanId")
-    @Expose
-    private String preferBasePlanId;*/
+    private long productAmount;
+
 
     private SkuDetails skuDetails;
     private ProductDetails productDetails;
@@ -54,6 +52,21 @@ public class ProductInfo {
 
     public void setProductDescription(String productDescription) {
         this.productDescription = productDescription;
+    }
+
+    public long getProductAmount(String preferBasePlanId,String preferOfferId) {
+        if(productType.equals(KcattaConstants.PRODUCT_TYPE_NON_CONSUMABLE) || productType.equals(KcattaConstants.PRODUCT_TYPE_CONSUMABLE)){
+            return this.productDetails.getOneTimePurchaseOfferDetails().getPriceAmountMicros();
+        }
+        else{
+            ProductDetails.SubscriptionOfferDetails item = findOfferDetail(preferBasePlanId,preferOfferId);
+            if(item != null) {
+                return item.getPricingPhases().getPricingPhaseList().get(0).getPriceAmountMicros();
+            }
+            else{
+                return 0;
+            }
+        }
     }
 
     public String getProductPrice(String preferBasePlanId,String preferOfferId) {
@@ -131,4 +144,13 @@ public class ProductInfo {
         }
         return item;
     }
+
+    public long getProductAmount() {
+        return productAmount;
+    }
+
+    public void setProductAmount(long productAmount) {
+        this.productAmount = productAmount;
+    }
 }
+
