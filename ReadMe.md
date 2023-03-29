@@ -7,4 +7,4 @@ Trên Android 12 thì cần chọn Write Permission là External (SDCard)
 
 #IOS
 
-Đối với IOS build ra một thưc mực khác rồi copy Libraries vào
+Đối với IOS build ra một folder khác rồi copy Libraries,Classes,Data vào
