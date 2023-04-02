@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using LitJson;
 using UnityEngine;
-
+using System.Runtime.InteropServices;
 public class Main : MonoBehaviour
 {
+#if UNITY_IPHONE
+    [DllImport("__Internal")] public static extern void sendDataFromUnity(string key,string value);
+#endif
     public UnityEngine.UI.Text text;
     // Start is called before the first frame update
     void Start()
@@ -41,9 +44,15 @@ public class Main : MonoBehaviour
         UnityPlayerNativeActivity.Call("sendDataFromUnity", sb.ToString());
 
 #endif
+
+#if UNITY_IPHONE
+
+        sendDataFromUnity("DOWNGRADE_PRODUCT", sb.ToString());
+
+#endif
     }
 
-        public void onBtnUpgradeClick()
+    public void onBtnUpgradeClick()
     {
         StringBuilder sb = new StringBuilder();
         JsonWriter writer = new JsonWriter(sb);
@@ -63,6 +72,12 @@ public class Main : MonoBehaviour
         AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         AndroidJavaObject UnityPlayerNativeActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
         UnityPlayerNativeActivity.Call("sendDataFromUnity", sb.ToString());
+
+#endif
+
+#if UNITY_IPHONE
+
+        sendDataFromUnity("UPGRADE_PRODUCT", sb.ToString());
 
 #endif
     }
@@ -89,6 +104,11 @@ public class Main : MonoBehaviour
         UnityPlayerNativeActivity.Call("sendDataFromUnity", sb.ToString());
 
 #endif
+#if UNITY_IPHONE
+
+        sendDataFromUnity("PAY_PRODUCT", sb.ToString());
+
+#endif
     }
 
     public void onButtonClick()
@@ -109,6 +129,11 @@ public class Main : MonoBehaviour
         AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 			AndroidJavaObject UnityPlayerNativeActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
 			UnityPlayerNativeActivity.Call("sendDataFromUnity", sb.ToString());
+
+#endif
+#if UNITY_IPHONE
+
+        sendDataFromUnity("GET_PRODUCT", sb.ToString());
 
 #endif
     }

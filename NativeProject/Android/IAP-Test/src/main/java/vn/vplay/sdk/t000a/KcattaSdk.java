@@ -498,6 +498,10 @@ public class KcattaSdk implements PurchasesUpdatedListener {
         }
     }
 
+    /***
+     * Query non-consumable or subs to know user has right for this product or not
+     * @param productType
+     */
     public void queryPurchase(String productType){
         if(!Utils.isOnline(hostedActivity)){
             if (gameListener != null) {

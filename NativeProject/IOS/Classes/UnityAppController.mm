@@ -293,6 +293,9 @@ extern "C" void UnityRequestQuit()
     }
 #endif
 
+    AppInfo * app = [[AppInfo alloc] init];
+    [[Sdk sharedInstance] initWithDelegate:self appInfo:app application:application launchOptions:launchOptions];
+    
     return YES;
 }
 
@@ -448,7 +451,21 @@ extern "C" void UnityRequestQuit()
     NSDictionary* arg = @{identifier: completionHandler};
     AppController_SendNotificationWithArg(kUnityHandleEventsForBackgroundURLSession, arg);
 }
+- (void)didGetProductsInAppSuccess:(NSArray<ProductInfo *> *)results{
+    for (int j=0; j< results.count; j++) {
+        ProductInfo* prodInfo = [results objectAtIndex:j];
+        NSLog(@"prodInfo.productId: %@",prodInfo.productId);
+        NSLog(@"prodInfo.productType: %@",prodInfo.productType);
+        NSLog(@"prodInfo.localizedPrice: %@",prodInfo.localizedPrice);
+    }
+}
+-(void)didGetProductsSubsSuccess:(NSArray<ProductInfo *> *)results{
+    
+}
 
+- (void)didGetProductsError:(NSString *)productType withError:(NSError *)error{
+    
+}
 @end
 
 
@@ -592,3 +609,12 @@ static void AddNewAPIImplIfNeeded()
         class_replaceMethod([UIView class], @selector(safeAreaInsets), UIView_SafeAreaInsets_IMP, UIView_safeAreaInsets_Enc);
     }
 }
+/*extern "C" {
+void sendDataFromUnity (const char* key, const char* value)
+    {
+        NSString *keyStr = [[NSString alloc] initWithUTF8String:key];
+        NSString *valueStr = [[NSString alloc] initWithUTF8String:value];
+        NSLog(@"Key: %@",keyStr);
+        NSLog(@"Value: %@",valueStr);
+    }
+}*/

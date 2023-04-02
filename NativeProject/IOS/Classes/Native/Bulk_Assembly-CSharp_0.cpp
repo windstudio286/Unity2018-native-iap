@@ -10160,6 +10160,8 @@ extern "C" IL2CPP_METHOD_ATTR String_t* Object_get_name_mA2D400141CB3C991C87A255
 extern "C" IL2CPP_METHOD_ATTR String_t* String_Concat_mB78D0094592718DA6D5DB6C712A9C225631666BE (String_t* p0, String_t* p1, const RuntimeMethod* method);
 // System.Void UnityEngine.Debug::Log(System.Object)
 extern "C" IL2CPP_METHOD_ATTR void Debug_Log_m4B7C70BAFD477C6BDB59C88A0934F0B018D03708 (RuntimeObject * p0, const RuntimeMethod* method);
+// System.Void Main::sendDataFromUnity(System.String,System.String)
+extern "C" IL2CPP_METHOD_ATTR void Main_sendDataFromUnity_m70AC43B69BDE28491BDDFDD2F704C31804F93F9A (String_t* ___key0, String_t* ___value1, const RuntimeMethod* method);
 // System.Boolean UnityEngine.Object::op_Inequality(UnityEngine.Object,UnityEngine.Object)
 extern "C" IL2CPP_METHOD_ATTR bool Object_op_Inequality_m31EF58E217E8F4BDD3E409DEF79E1AEE95874FC1 (Object_tAE11E5E46CD5C37C9F3E8950C00CD8B45666A2D0 * p0, Object_tAE11E5E46CD5C37C9F3E8950C00CD8B45666A2D0 * p1, const RuntimeMethod* method);
 // System.Void UnityEngine.MonoBehaviour::.ctor()
@@ -24861,6 +24863,32 @@ extern "C" IL2CPP_METHOD_ATTR void WriterContext__ctor_mBCC3F1348A4D49061B5FB536
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
+extern "C" void DEFAULT_CALL sendDataFromUnity(char*, char*);
+// System.Void Main::sendDataFromUnity(System.String,System.String)
+extern "C" IL2CPP_METHOD_ATTR void Main_sendDataFromUnity_m70AC43B69BDE28491BDDFDD2F704C31804F93F9A (String_t* ___key0, String_t* ___value1, const RuntimeMethod* method)
+{
+	typedef void (DEFAULT_CALL *PInvokeFunc) (char*, char*);
+
+	// Marshaling of parameter U27___key0U27 to native representation
+	char* ____key0_marshaled = NULL;
+	____key0_marshaled = il2cpp_codegen_marshal_string(___key0);
+
+	// Marshaling of parameter U27___value1U27 to native representation
+	char* ____value1_marshaled = NULL;
+	____value1_marshaled = il2cpp_codegen_marshal_string(___value1);
+
+	// Native function invocation
+	reinterpret_cast<PInvokeFunc>(sendDataFromUnity)(____key0_marshaled, ____value1_marshaled);
+
+	// Marshaling cleanup of parameter U27___key0U27 native representation
+	il2cpp_codegen_marshal_free(____key0_marshaled);
+	____key0_marshaled = NULL;
+
+	// Marshaling cleanup of parameter U27___value1U27 native representation
+	il2cpp_codegen_marshal_free(____value1_marshaled);
+	____value1_marshaled = NULL;
+
+}
 // System.Void Main::Start()
 extern "C" IL2CPP_METHOD_ATTR void Main_Start_m9E30CADE19ACC6439D47BBE9FAF0C5DDBE3E8978 (Main_t7BD87A0CB813F834A2F93006206A3CE79188D0C1 * __this, const RuntimeMethod* method)
 {
@@ -24930,6 +24958,10 @@ extern "C" IL2CPP_METHOD_ATTR void Main_onBtnDowngradeClick_mD46A21048B04CCC5A83
 		String_t* L_16 = String_Concat_mB78D0094592718DA6D5DB6C712A9C225631666BE(_stringLiteralA4B4F247E62206A7FCEF915D2AC7D57EC6523F62, L_15, /*hidden argument*/NULL);
 		IL2CPP_RUNTIME_CLASS_INIT(Debug_t7B5FCB117E2FD63B6838BC52821B252E2BFB61C4_il2cpp_TypeInfo_var);
 		Debug_Log_m4B7C70BAFD477C6BDB59C88A0934F0B018D03708(L_16, /*hidden argument*/NULL);
+		StringBuilder_t * L_17 = V_0;
+		NullCheck(L_17);
+		String_t* L_18 = VirtFuncInvoker0< String_t* >::Invoke(3 /* System.String System.Object::ToString() */, L_17);
+		Main_sendDataFromUnity_m70AC43B69BDE28491BDDFDD2F704C31804F93F9A(_stringLiteral766CB94A8B7F92240FFC34D65ABBB5775359D9C8, L_18, /*hidden argument*/NULL);
 		return;
 	}
 }
@@ -24988,6 +25020,10 @@ extern "C" IL2CPP_METHOD_ATTR void Main_onBtnUpgradeClick_mA7C8E2712A72199464324
 		String_t* L_16 = String_Concat_mB78D0094592718DA6D5DB6C712A9C225631666BE(_stringLiteralA4B4F247E62206A7FCEF915D2AC7D57EC6523F62, L_15, /*hidden argument*/NULL);
 		IL2CPP_RUNTIME_CLASS_INIT(Debug_t7B5FCB117E2FD63B6838BC52821B252E2BFB61C4_il2cpp_TypeInfo_var);
 		Debug_Log_m4B7C70BAFD477C6BDB59C88A0934F0B018D03708(L_16, /*hidden argument*/NULL);
+		StringBuilder_t * L_17 = V_0;
+		NullCheck(L_17);
+		String_t* L_18 = VirtFuncInvoker0< String_t* >::Invoke(3 /* System.String System.Object::ToString() */, L_17);
+		Main_sendDataFromUnity_m70AC43B69BDE28491BDDFDD2F704C31804F93F9A(_stringLiteralFC1FE37D1AB184A642F3EF1BA6BFEAED6D354153, L_18, /*hidden argument*/NULL);
 		return;
 	}
 }
@@ -25046,6 +25082,10 @@ extern "C" IL2CPP_METHOD_ATTR void Main_onBtnPayClick_m5DFB095FAA0AFD5AFBE15F9DD
 		String_t* L_16 = String_Concat_mB78D0094592718DA6D5DB6C712A9C225631666BE(_stringLiteralA4B4F247E62206A7FCEF915D2AC7D57EC6523F62, L_15, /*hidden argument*/NULL);
 		IL2CPP_RUNTIME_CLASS_INIT(Debug_t7B5FCB117E2FD63B6838BC52821B252E2BFB61C4_il2cpp_TypeInfo_var);
 		Debug_Log_m4B7C70BAFD477C6BDB59C88A0934F0B018D03708(L_16, /*hidden argument*/NULL);
+		StringBuilder_t * L_17 = V_0;
+		NullCheck(L_17);
+		String_t* L_18 = VirtFuncInvoker0< String_t* >::Invoke(3 /* System.String System.Object::ToString() */, L_17);
+		Main_sendDataFromUnity_m70AC43B69BDE28491BDDFDD2F704C31804F93F9A(_stringLiteralF752CEA4971CF3733BD18F10CEC4F13D7D236052, L_18, /*hidden argument*/NULL);
 		return;
 	}
 }
@@ -25098,6 +25138,10 @@ extern "C" IL2CPP_METHOD_ATTR void Main_onButtonClick_m903828E90C5BDA7B9525FB85C
 		String_t* L_14 = String_Concat_mB78D0094592718DA6D5DB6C712A9C225631666BE(_stringLiteral7FF2C3389EABEF6C5A0E1128CC14B8E79EF69C31, L_13, /*hidden argument*/NULL);
 		IL2CPP_RUNTIME_CLASS_INIT(Debug_t7B5FCB117E2FD63B6838BC52821B252E2BFB61C4_il2cpp_TypeInfo_var);
 		Debug_Log_m4B7C70BAFD477C6BDB59C88A0934F0B018D03708(L_14, /*hidden argument*/NULL);
+		StringBuilder_t * L_15 = V_0;
+		NullCheck(L_15);
+		String_t* L_16 = VirtFuncInvoker0< String_t* >::Invoke(3 /* System.String System.Object::ToString() */, L_15);
+		Main_sendDataFromUnity_m70AC43B69BDE28491BDDFDD2F704C31804F93F9A(_stringLiteralCB45ECECAD27B9901602FED065BFF4672D2B5DFF, L_16, /*hidden argument*/NULL);
 		return;
 	}
 }
