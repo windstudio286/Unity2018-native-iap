@@ -48,41 +48,35 @@
 }
 
 -(void)requestPriceProduct:(NSArray<ProductInfo *> *)listProducts withType:(NSString *)typeProduct{
-    if([typeProduct isEqual:PRODUCT_TYPE_INAPP]){
-        NSMutableArray *inAppProducts = [self.dictProducts objectForKey:PRODUCT_TYPE_INAPP];
-        if(inAppProducts != NULL && inAppProducts.count > 0){
-            if(self.delegate != NULL){
-                NSArray *results = [inAppProducts copy];
-                [self.delegate didGetProductsInAppSuccess:results];
-            }
-        }else{
-            
-            if(self->requestProduct != NULL){
-                [self->requestProduct cancel];
-                self->requestProduct = NULL;
-            }
-            
-            NSMutableArray * productIdentifiers = [[NSMutableArray alloc] init];
-            NSMutableArray* inAppProducts = [[NSMutableArray alloc] init];
-            for (int i=0; i<listProducts.count; i++) {
-                ProductInfo* item = [listProducts objectAtIndex:i];
-                NSString* productId= [[NSString alloc] initWithString:item.productId];
-                [productIdentifiers addObject:productId];
-                [inAppProducts addObject:item];
-            }
-            [self.dictProducts setValue:inAppProducts forKey:PRODUCT_TYPE_INAPP];
-            
-            SKProductsRequest *productsRequest = [[SKProductsRequest alloc]
-                                                  initWithProductIdentifiers:[NSSet setWithArray:productIdentifiers]];
-            // Keep a strong reference to the request.
-            self->requestProduct = productsRequest;
-            productsRequest.tagValue = PRODUCT_TYPE_INAPP;
-            productsRequest.delegate = self;
-            [productsRequest start];
+    NSMutableArray *inAppProducts = [self.dictProducts objectForKey:typeProduct];
+    if(inAppProducts != NULL && inAppProducts.count > 0){
+        if(self.delegate != NULL){
+            NSArray *results = [inAppProducts copy];
+            [self.delegate didGetProductsInAppSuccess:results];
         }
-    }
-    else{
+    }else{
+        if(self->requestProduct != NULL){
+            [self->requestProduct cancel];
+            self->requestProduct = NULL;
+        }
         
+        NSMutableArray * productIdentifiers = [[NSMutableArray alloc] init];
+        NSMutableArray* inAppProducts = [[NSMutableArray alloc] init];
+        for (int i=0; i<listProducts.count; i++) {
+            ProductInfo* item = [listProducts objectAtIndex:i];
+            NSString* productId= [[NSString alloc] initWithString:item.productId];
+            [productIdentifiers addObject:productId];
+            [inAppProducts addObject:item];
+        }
+        [self.dictProducts setValue:inAppProducts forKey:typeProduct];
+        
+        SKProductsRequest *productsRequest = [[SKProductsRequest alloc]
+                                              initWithProductIdentifiers:[NSSet setWithArray:productIdentifiers]];
+        // Keep a strong reference to the request.
+        self->requestProduct = productsRequest;
+        productsRequest.tagValue = typeProduct;
+        productsRequest.delegate = self;
+        [productsRequest start];
     }
 }
 
