@@ -191,7 +191,16 @@
 		F855AE4A29D9C6CC00A1040C /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE4929D9C6CC00A1040C /* Constants.m */; };
 		F855AE4D29D9E7EA00A1040C /* SKProduct+LocalizedPrice.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE4C29D9E7EA00A1040C /* SKProduct+LocalizedPrice.m */; };
 		F855AE5029D9F2A700A1040C /* SKProductsRequest+Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE4F29D9F2A700A1040C /* SKProductsRequest+Tag.m */; };
+		F855AE5529DAAEC800A1040C /* BaseUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE5429DAAEC800A1040C /* BaseUIView.m */; };
+		F855AE5F29DADA2200A1040C /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE5C29DADA2200A1040C /* LoadingView.m */; };
+		F855AE6029DADA2200A1040C /* LoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F855AE5D29DADA2200A1040C /* LoadingView.xib */; };
+		F855AE6529DADB3D00A1040C /* TSLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE6129DADB3D00A1040C /* TSLanguageManager.m */; };
+		F855AE6629DADB3D00A1040C /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE6429DADB3D00A1040C /* Utils.m */; };
+		F855AE6F29DADE4300A1040C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F855AE7129DADE4300A1040C /* Localizable.strings */; };
+		F855AE7629DAE35F00A1040C /* PaymentView.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE7329DAE35F00A1040C /* PaymentView.m */; };
+		F855AE7729DAE35F00A1040C /* PaymentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F855AE7529DAE35F00A1040C /* PaymentView.xib */; };
 		F87842D2BDF9B8A08217898D /* Bulk_UnityEngine.CoreModule_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670D4F9188B1675E4FBE21E6 /* Bulk_UnityEngine.CoreModule_0.cpp */; };
+		F8A7AC9329DC194D00ED221C /* TransactionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F8A7AC9129DC194D00ED221C /* TransactionInfo.m */; };
 		F8DE49D0A381B1E86E7F1BD8 /* Bulk_mscorlib_16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E0DD419FBCA186A089EA96E6 /* Bulk_mscorlib_16.cpp */; };
 		F913470988C467C6A93D01A6 /* Il2CppCompilerCalculateTypeValues_14Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 337E47E984D0F2FA4AFAC113 /* Il2CppCompilerCalculateTypeValues_14Table.cpp */; };
 		F99D4B3FAFDD8FC264771164 /* Il2CppGenericMethodPointerTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2E343FFBDB10A2133AFDCBC /* Il2CppGenericMethodPointerTable.cpp */; };
@@ -477,6 +486,22 @@
 		F855AE4C29D9E7EA00A1040C /* SKProduct+LocalizedPrice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SKProduct+LocalizedPrice.m"; sourceTree = "<group>"; };
 		F855AE4E29D9F2A700A1040C /* SKProductsRequest+Tag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SKProductsRequest+Tag.h"; sourceTree = "<group>"; };
 		F855AE4F29D9F2A700A1040C /* SKProductsRequest+Tag.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SKProductsRequest+Tag.m"; sourceTree = "<group>"; };
+		F855AE5329DAAEC800A1040C /* BaseUIView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseUIView.h; sourceTree = "<group>"; };
+		F855AE5429DAAEC800A1040C /* BaseUIView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseUIView.m; sourceTree = "<group>"; };
+		F855AE5C29DADA2200A1040C /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
+		F855AE5D29DADA2200A1040C /* LoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingView.xib; sourceTree = "<group>"; };
+		F855AE5E29DADA2200A1040C /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
+		F855AE6129DADB3D00A1040C /* TSLanguageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSLanguageManager.m; sourceTree = "<group>"; };
+		F855AE6229DADB3D00A1040C /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		F855AE6329DADB3D00A1040C /* TSLanguageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSLanguageManager.h; sourceTree = "<group>"; };
+		F855AE6429DADB3D00A1040C /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
+		F855AE7029DADE4300A1040C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F855AE7229DADEF400A1040C /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F855AE7329DAE35F00A1040C /* PaymentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentView.m; sourceTree = "<group>"; };
+		F855AE7429DAE35F00A1040C /* PaymentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentView.h; sourceTree = "<group>"; };
+		F855AE7529DAE35F00A1040C /* PaymentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentView.xib; sourceTree = "<group>"; };
+		F8A7AC9129DC194D00ED221C /* TransactionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionInfo.m; sourceTree = "<group>"; };
+		F8A7AC9229DC194D00ED221C /* TransactionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionInfo.h; sourceTree = "<group>"; };
 		FA254E728366C5F348A70C96 /* UnresolvedVirtualCallStubs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UnresolvedVirtualCallStubs.cpp; path = Classes/Native/UnresolvedVirtualCallStubs.cpp; sourceTree = SOURCE_ROOT; };
 		FC0B20A11B7A4F0B00FDFC55 /* OnDemandResources.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OnDemandResources.mm; sourceTree = "<group>"; };
 		FC3D7EBE16D2621600D1BD0D /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReporter.h; sourceTree = "<group>"; };
@@ -882,6 +907,8 @@
 		F855AE3A29D915C100A1040C /* KcattaSdk */ = {
 			isa = PBXGroup;
 			children = (
+				F855AE6829DADD5700A1040C /* Resources */,
+				F855AE5129DAAB7800A1040C /* UI */,
 				F855AE4229D9437400A1040C /* Utils */,
 				F855AE3E29D9429800A1040C /* Model */,
 				F855AE3B29D9428500A1040C /* Sdk.h */,
@@ -893,6 +920,8 @@
 		F855AE3E29D9429800A1040C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F8A7AC9229DC194D00ED221C /* TransactionInfo.h */,
+				F8A7AC9129DC194D00ED221C /* TransactionInfo.m */,
 				F855AE3F29D942B700A1040C /* ProductInfo.h */,
 				F855AE4029D942B700A1040C /* ProductInfo.m */,
 				F855AE4529D94B0A00A1040C /* AppInfo.h */,
@@ -904,6 +933,10 @@
 		F855AE4229D9437400A1040C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				F855AE6329DADB3D00A1040C /* TSLanguageManager.h */,
+				F855AE6129DADB3D00A1040C /* TSLanguageManager.m */,
+				F855AE6229DADB3D00A1040C /* Utils.h */,
+				F855AE6429DADB3D00A1040C /* Utils.m */,
 				F855AE4829D9C6CC00A1040C /* Constants.h */,
 				F855AE4929D9C6CC00A1040C /* Constants.m */,
 				F855AE4B29D9E7EA00A1040C /* SKProduct+LocalizedPrice.h */,
@@ -912,6 +945,53 @@
 				F855AE4F29D9F2A700A1040C /* SKProductsRequest+Tag.m */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		F855AE5129DAAB7800A1040C /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				F855AE6729DADD3D00A1040C /* PaymentView */,
+				F855AE5629DAD14500A1040C /* CustomView */,
+				F855AE5229DAAD7B00A1040C /* BaseView */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		F855AE5229DAAD7B00A1040C /* BaseView */ = {
+			isa = PBXGroup;
+			children = (
+				F855AE5329DAAEC800A1040C /* BaseUIView.h */,
+				F855AE5429DAAEC800A1040C /* BaseUIView.m */,
+			);
+			path = BaseView;
+			sourceTree = "<group>";
+		};
+		F855AE5629DAD14500A1040C /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				F855AE5E29DADA2200A1040C /* LoadingView.h */,
+				F855AE5C29DADA2200A1040C /* LoadingView.m */,
+				F855AE5D29DADA2200A1040C /* LoadingView.xib */,
+			);
+			path = CustomView;
+			sourceTree = "<group>";
+		};
+		F855AE6729DADD3D00A1040C /* PaymentView */ = {
+			isa = PBXGroup;
+			children = (
+				F855AE7429DAE35F00A1040C /* PaymentView.h */,
+				F855AE7329DAE35F00A1040C /* PaymentView.m */,
+				F855AE7529DAE35F00A1040C /* PaymentView.xib */,
+			);
+			path = PaymentView;
+			sourceTree = "<group>";
+		};
+		F855AE6829DADD5700A1040C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F855AE7129DADE4300A1040C /* Localizable.strings */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -988,6 +1068,7 @@
 				French,
 				German,
 				en,
+				vi,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			productRefGroup = 19C28FACFE9D520D11CA2CBB /* Products */;
@@ -1006,12 +1087,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA31BF971B55660D0013FB1B /* Data in Resources */,
+				F855AE6029DADA2200A1040C /* LoadingView.xib in Resources */,
 				56C56C9817D6015200616839 /* Images.xcassets in Resources */,
 				81914303A202125E8A2A0D32 /* LaunchScreen-iPhone.storyboard in Resources */,
+				F855AE6F29DADE4300A1040C /* Localizable.strings in Resources */,
 				97474585B0AA8D7CC4006638 /* LaunchScreen-iPhonePortrait.png in Resources */,
 				29F74568A0E1F003BBA9BD42 /* LaunchScreen-iPhoneLandscape.png in Resources */,
 				D3A14FA3BCBE725A6956BEA3 /* LaunchScreen-iPad.storyboard in Resources */,
 				EF704BDE916865D62EDC56BE /* LaunchScreen-iPad.png in Resources */,
+				F855AE7729DAE35F00A1040C /* PaymentView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1091,10 +1175,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				F855AE3D29D9428500A1040C /* Sdk.m in Sources */,
+				F855AE5F29DADA2200A1040C /* LoadingView.m in Sources */,
 				D82DCFC30E8000A5005D6AD8 /* main.mm in Sources */,
 				8A793A081ED43EE100B44EF1 /* UnityViewControllerBase+iOS.mm in Sources */,
 				D8A1C7280E80637F000160D3 /* RegisterMonoModules.cpp in Sources */,
 				8AA568AE1827DD79004969C7 /* WWWConnection.mm in Sources */,
+				F855AE7629DAE35F00A1040C /* PaymentView.m in Sources */,
 				56DBF99D15E3CDC9007A4A8D /* iPhone_Sensors.mm in Sources */,
 				85E5623820F4F4D1001DFEF6 /* UnityView+Keyboard.mm in Sources */,
 				8A3EDDC81615B7C1001839E9 /* SplashScreen.mm in Sources */,
@@ -1116,6 +1202,7 @@
 				8A16150C1A8E4362006FA788 /* FullScreenVideoPlayer.mm in Sources */,
 				FC85CCBB16C3ED8000BAF7C7 /* CrashReporter.mm in Sources */,
 				8AB3CB3E16D390BB00697AD5 /* VideoPlayer.mm in Sources */,
+				F855AE6629DADB3D00A1040C /* Utils.m in Sources */,
 				8A793A071ED43EE100B44EF1 /* UnityView+tvOS.mm in Sources */,
 				8A2AA93516E0978D001FB470 /* CMVideoSampling.mm in Sources */,
 				8A851BA716FB2F6D00E911DB /* UnityView.mm in Sources */,
@@ -1125,6 +1212,7 @@
 				8A793A091ED43EE100B44EF1 /* UnityViewControllerBase+tvOS.mm in Sources */,
 				8A6720A519EEB905006C92E0 /* InternalProfiler.cpp in Sources */,
 				8A793A061ED43EE100B44EF1 /* UnityView+iOS.mm in Sources */,
+				F855AE6529DADB3D00A1040C /* TSLanguageManager.m in Sources */,
 				8ADCE38B19C87177006F04F6 /* CameraCapture.mm in Sources */,
 				8A4815C117A28E7F003FBFD5 /* UnityAppController+ViewHandling.mm in Sources */,
 				8A25E6D218D767E20006A227 /* Filesystem.mm in Sources */,
@@ -1143,6 +1231,7 @@
 				3A334EE6B6C9F1E2437E8C73 /* Bulk_Generics_10.cpp in Sources */,
 				7FDA41178DF2226BE4873DEC /* Bulk_Generics_11.cpp in Sources */,
 				CBAC49F88582326C2059A1E4 /* Bulk_Generics_12.cpp in Sources */,
+				F855AE5529DAAEC800A1040C /* BaseUIView.m in Sources */,
 				67154203BA9A84FC03F5249E /* Bulk_Generics_13.cpp in Sources */,
 				6919476CB46A017C5E806E86 /* Bulk_Generics_14.cpp in Sources */,
 				83874F0C9F72E52D8E943112 /* Bulk_Generics_2.cpp in Sources */,
@@ -1231,6 +1320,7 @@
 				B70440CFAD3028BCED011C9D /* Il2CppCompilerCalculateTypeValues_6Table.cpp in Sources */,
 				B0DF4C8399705D11AF6A9D13 /* Il2CppCompilerCalculateTypeValues_7Table.cpp in Sources */,
 				382641B0814E1CF17FF17CF2 /* Il2CppCompilerCalculateTypeValues_8Table.cpp in Sources */,
+				F8A7AC9329DC194D00ED221C /* TransactionInfo.m in Sources */,
 				409A417D9709509DFD1ADE71 /* Il2CppCompilerCalculateTypeValues_9Table.cpp in Sources */,
 				9AAD4045AEAC57A95332E7C4 /* Il2CppGenericClassTable.cpp in Sources */,
 				053A4DBE9430EB4420803908 /* Il2CppGenericComDefinitions0.cpp in Sources */,
@@ -1276,6 +1366,15 @@
 				5623C57C17FDCB0900090B9E /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		F855AE7129DADE4300A1040C /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F855AE7029DADE4300A1040C /* en */,
+				F855AE7229DADEF400A1040C /* vi */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

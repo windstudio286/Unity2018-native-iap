@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  Unity-iPhone
+
+  Created by TranCong on 03/04/2023.
+  
+*/
+"Đồng ý" = "OK";
+"Huỷ" = "Cancel";
+"Thông báo" = "Alert!";
+"Thử lại" = "Try Again";
+"Đang khởi tạo giao dịch" = "Loading ...";
+"Đang xác thực giao dịch" = "Processing...";
+"Không tìm thấy hóa đơn" = "No found the receipt";

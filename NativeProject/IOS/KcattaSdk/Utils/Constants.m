@@ -20,4 +20,10 @@ NSString *const PRODUCT_TYPE_SUBS = @"subs";
 NSString *const PRODUCT_TYPE_INAPP = @"inapp";
 
 NSString *const PRODUCT_TYPE = @"productType";
+
+NSString *const PAYMENT = @"PAYMENT";
+NSString *const RESTORE = @"RESTORE";
+
+int QUERY_PRODUCT_NOT_AVAILABLE = -99;
+int NO_INTERNET_CONNECTION = -100;
 @end

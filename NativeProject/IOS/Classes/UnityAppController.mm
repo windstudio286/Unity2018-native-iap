@@ -452,6 +452,7 @@ extern "C" void UnityRequestQuit()
     AppController_SendNotificationWithArg(kUnityHandleEventsForBackgroundURLSession, arg);
 }
 - (void)didGetProductsInAppSuccess:(NSArray<ProductInfo *> *)results{
+    NSLog(@"didGetProductsInAppSuccess");
     for (int j=0; j< results.count; j++) {
         ProductInfo* prodInfo = [results objectAtIndex:j];
         NSLog(@"prodInfo.productId: %@",prodInfo.productId);
@@ -460,11 +461,26 @@ extern "C" void UnityRequestQuit()
     }
 }
 -(void)didGetProductsSubsSuccess:(NSArray<ProductInfo *> *)results{
-    
+    NSLog(@"didGetProductsSubsSuccess");
 }
 
 - (void)didGetProductsError:(NSString *)productType withError:(NSError *)error{
-    
+    NSLog(@"didGetProductsError");
+}
+-(void)didPurchaseSuccess:(TransactionInfo *)transaction withProduct:(ProductInfo *)productInfo{
+    NSLog(@"didPurchaseSuccess");
+}
+-(void)didPurchaseFailed:(int)errorCode purchaseError:(NSString *)error{
+    NSLog(@"didPurchaseFailed");
+}
+-(void)didQueryProductInApp:(NSArray<TransactionInfo *> *)listTrans{
+    NSLog(@"didQueryProductInApp");
+}
+-(void)didQueryProductSubs:(NSArray<TransactionInfo *> *)listTrans{
+    NSLog(@"didQueryProductSubs");
+}
+-(void)didQueryError:(int)errorCode withError:(NSString *)error{
+    NSLog(@"didQueryError %@",error);
 }
 @end
 

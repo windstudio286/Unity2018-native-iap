@@ -22,6 +22,12 @@ extern NSString *const PRODUCT_TYPE_SUBS;
 extern NSString *const PRODUCT_TYPE_INAPP;
 
 extern NSString *const PRODUCT_TYPE;
+
+extern NSString *const PAYMENT;
+extern NSString *const RESTORE;
+
+extern int QUERY_PRODUCT_NOT_AVAILABLE;
+extern int NO_INTERNET_CONNECTION;
 @end
 
 NS_ASSUME_NONNULL_END
