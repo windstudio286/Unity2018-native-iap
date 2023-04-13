@@ -9,6 +9,7 @@
 #import "SKProduct+LocalizedPrice.h"
 #import "SKProductsRequest+Tag.h"
 #import "PaymentView.h"
+#import <OneSignal/OneSignal.h>
 @interface Sdk()<SKProductsRequestDelegate>
 
 @property (nonatomic, weak) id<SdkDelegate> delegate;
@@ -47,6 +48,20 @@
     self.delegate = delegate;
     self.appInfo = appInfo;
     self.uiApplicaion = application;
+    //setup OneSignal
+    // Remove this method to stop OneSignal Debugging
+    [OneSignal setLogLevel:ONE_S_LL_VERBOSE visualLevel:ONE_S_LL_NONE];
+      
+      // OneSignal initialization
+    [OneSignal initWithLaunchOptions:launchOptions];
+    [OneSignal setAppId:appInfo.oneSignalId];
+
+      // promptForPushNotifications will show the native iOS notification permission prompt.
+      // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 8)
+    [OneSignal promptForPushNotificationsWithUserResponse:^(BOOL accepted) {
+        NSLog(@"User accepted notifications: %d", accepted);
+    }];
+    
 }
 
 -(void)requestPriceProduct:(NSArray<ProductInfo *> *)listProducts withType:(NSString *)typeProduct{
@@ -299,5 +314,12 @@
         }
     }
     return findProductItem;
+}
+-(NSString *)getOneSignalUserId{
+    NSString* userId = @"";
+    if([OneSignal getDeviceState] != NULL ){
+        userId =[OneSignal getDeviceState].userId;
+    }
+    return userId;
 }
 @end

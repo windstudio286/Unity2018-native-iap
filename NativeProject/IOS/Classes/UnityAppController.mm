@@ -294,6 +294,7 @@ extern "C" void UnityRequestQuit()
 #endif
 
     AppInfo * app = [[AppInfo alloc] init];
+    app.oneSignalId = @"509fba34-5690-491b-9bda-276958ff3881";
     [[Sdk sharedInstance] initWithDelegate:self appInfo:app application:application launchOptions:launchOptions];
     
     return YES;

@@ -47,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)restoreProducts;
 -(NSDictionary*) getDictProducts;
 -(ProductInfo*) findProductInfobyId:(NSString*) productId;
+-(NSString*) getOneSignalUserId;
 @end
 
 NS_ASSUME_NONNULL_END
