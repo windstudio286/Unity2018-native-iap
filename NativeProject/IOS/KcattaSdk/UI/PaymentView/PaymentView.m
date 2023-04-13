@@ -9,12 +9,15 @@
 
 @interface PaymentView ()
 @property (nonatomic) BOOL hasRestorablePurchases;
-/// Keeps track of all restored purchases.
-@property (strong) NSMutableArray *productsRestored;
-
+/// Keeps track of all restored purchases including non-consumable and auto-renew subscription
+@property (nonatomic,strong) NSMutableArray *productsRestored;
+@property (nonatomic,strong) NSMutableDictionary *productsCompleted;
 @end
 @implementation PaymentView
-
+{
+    int lastTransCount;
+    TransactionInfo* lastSuccessTransaction;
+}
 @synthesize productInfo;
 @synthesize mode;
 /*
@@ -29,7 +32,20 @@
  }*/
 -(void)initTransaction{
     self.hasRestorablePurchases = NO;
-    
+    self->lastTransCount = [[[SKPaymentQueue defaultQueue] transactions] count];
+    if(self.productsRestored == nil){
+        self.productsRestored = [[NSMutableArray alloc] init];
+    }
+    if (self.productsRestored.count > 0) {
+        [self.productsRestored removeAllObjects];
+    }
+    if(self.productsCompleted == NULL){
+        self.productsCompleted = [[NSMutableDictionary alloc] init];
+    }
+    else{
+        [self.productsCompleted removeAllObjects];
+    }
+    NSLog(@"[Begin Transaction] .count : %ld",[[[SKPaymentQueue defaultQueue] transactions] count]);
     if([mode isEqual:PAYMENT]){
         SKMutablePayment *payment = [[SKMutablePayment alloc] init] ;
         payment.productIdentifier = productInfo.productId;
@@ -38,22 +54,19 @@
         [[SKPaymentQueue defaultQueue] addPayment:payment];
     }
     else if([mode isEqual:RESTORE]){
-        if(self.productsRestored == nil){
-            self.productsRestored = [[NSMutableArray alloc] init];
-        }
-        if (self.productsRestored.count > 0) {
-            [self.productsRestored removeAllObjects];
-        }
+        
         NSLog(@"Restore starting...");
         [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
     }
 }
 -(void)configUI:(UIView *)parentView{
+    NSLog(@"Add Observer...");
     [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
     [self showLoading:[TSLanguageManager localizedString:@"Đang khởi tạo giao dịch"]];
     [self initTransaction];
 }
 - (void)removeFromSuperview{
+    NSLog(@"Remove Observer...");
     [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
     [super removeFromSuperview];
 }
@@ -90,63 +103,117 @@
     for(SKPaymentTransaction *transaction in transactions) {
         
     }
-    [self btnClose:NULL];
+    
+    NSLog(@"transactions...: %ld",[[SKPaymentQueue defaultQueue] transactions].count);
+    if([[SKPaymentQueue defaultQueue] transactions].count <= self -> lastTransCount){
+        [self btnClose:NULL];
+    }
 }
 
 -(void)complete:(SKPaymentTransaction*) transaction{
     NSLog(@"complete...");
     [self showLoading:[TSLanguageManager localizedString:@"Đang xác thực giao dịch"]];
     
-    
     NSURL *receiptURL = [[NSBundle mainBundle] appStoreReceiptURL];
     NSData *receipt = [NSData dataWithContentsOfURL:receiptURL];
-    TransactionInfo *trans = [[TransactionInfo alloc] init];
-    trans.productId = transaction.payment.productIdentifier;
-    
-    if (!receipt) {
-        NSLog(@"no receipt");
-        [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-        [self showAlert:NULL withContent:[TSLanguageManager localizedString:@"Không tìm thấy hóa đơn"] withAction:^(UIAlertAction * _Nonnull) {
-            //[self btnClose:NULL];
-        }];
-    } else {
-        NSString *encodedReceipt = [receipt base64EncodedStringWithOptions:0];
-        NSLog(@"receipt: %@",encodedReceipt);
+    TransactionInfo *trans = [self.productsCompleted objectForKey:transaction.payment.productIdentifier];
+    if(trans == NULL){
+        trans = [[TransactionInfo alloc] init];
+        [self.productsCompleted setValue:trans forKey:transaction.payment.productIdentifier];
+        trans.productId = transaction.payment.productIdentifier;
         
-        trans.purchasedToken = encodedReceipt;
-        trans.transactionDate = transaction.transactionDate;
-        NSLog(@"transaction Date: %@",[Utils displayDate:trans.transactionDate]);
-        trans.transactionIdentifier = transaction.transactionIdentifier;
-        NSLog(@"transaction Identifier: %@",trans.transactionIdentifier);
-        NSLog(@"product id: %@",trans.productId);
-        if(self.delegate != NULL){
-            [self.delegate didPurchaseSuccess:trans withProduct:productInfo];
+        if (!receipt) {
+            NSLog(@"no receipt");
+            [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+            [self showAlert:NULL withContent:[TSLanguageManager localizedString:@"Không tìm thấy hóa đơn"] withAction:^(UIAlertAction * _Nonnull) {
+                //[self btnClose:NULL];
+            }];
+        } else {
+            NSString *encodedReceipt = [receipt base64EncodedStringWithOptions:0];
+            //NSLog(@"receipt: %@",encodedReceipt);
+            /*NSString *encodedReceipt2 = [transaction.transactionReceipt base64EncodedStringWithOptions:0];
+             NSLog(@"receipt2: %@",encodedReceipt2);*/
+            
+            trans.purchasedToken = encodedReceipt;
+            trans.transactionDate = transaction.transactionDate;
+            trans.transactionIdentifier = transaction.transactionIdentifier;
+            if(productInfo == NULL){
+                productInfo = [[Sdk sharedInstance] findProductInfobyId:trans.productId];
+            }
+            trans.productType = productInfo.productType;
+            NSLog(@"transaction Identifier: %@",transaction.transactionIdentifier);
+            NSLog(@"transaction Date: %@",[Utils displayDate:trans.transactionDate]);
+            NSLog(@"transaction Original Identifier: %@",transaction.originalTransaction.transactionIdentifier);
+            NSLog(@"product id: %@",trans.productId);
+            if(self.delegate != NULL){
+                [self.delegate didPurchaseSuccess:trans withProduct:productInfo];
+            }
         }
-        [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-        //[self btnClose:NULL];
     }
-    
+    NSLog(@"complete finishTransaction...");
+    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+    //[self btnClose:NULL];
 }
 
 -(void)restore:(SKPaymentTransaction*) transaction{
+    NSLog(@"restore...");
     if(!self.hasRestorablePurchases){
         self.hasRestorablePurchases = TRUE;
     }
-    NSLog(@"restore...%@",transaction.payment.productIdentifier);
-    NSString *encodedReceipt = [transaction.transactionReceipt base64EncodedStringWithOptions:0];
-    NSLog(@"restore receipt: %@",encodedReceipt);
-    TransactionInfo* trans = [[TransactionInfo alloc] init];
-    trans.productId = transaction.payment.productIdentifier;
-    ProductInfo* productInfo = [[Sdk sharedInstance] findProductInfobyId:trans.productId];
-    trans.purchasedToken = encodedReceipt;
-    trans.productType = productInfo.productType;
-    trans.transactionDate = transaction.transactionDate;
-    NSLog(@"restore transactionDate: %@",[Utils displayDate:trans.transactionDate]);
-    [self.productsRestored addObject:trans];
+    NSLog(@"productId...%@",transaction.payment.productIdentifier);
+    /*NSLog(@"transactionDate: %@",[Utils displayDate:transaction.transactionDate]);
+     NSLog(@"transactionID: %@",transaction.transactionIdentifier);
+     NSLog(@"originalTransaction.transactionID: %@",transaction.originalTransaction.transactionIdentifier);
+     NSLog(@"====");*/
+    NSURL *receiptURL = [[NSBundle mainBundle] appStoreReceiptURL];
+    NSData *receipt = [NSData dataWithContentsOfURL:receiptURL];
+    NSString *encodedReceipt = NULL;
+    if(receipt != NULL){
+        encodedReceipt = [receipt base64EncodedStringWithOptions:0];
+        //NSLog(@"receipt: %@",encodedReceipt);
+    }
+    TransactionInfo* trans = [self productList:self.productsRestored contain:transaction.payment.productIdentifier];
+    if(trans != NULL){
+        //update last transaction
+        //NSLog(@"transactionDate1: %@",[Utils displayDate:trans.transactionDate]);
+        //NSLog(@"transactionIdentifier1: %@",trans.transactionIdentifier);
+        
+        //NSLog(@"transactionDate2: %@",[Utils displayDate:transaction.transactionDate]);
+        //NSLog(@"transactionIdentifier2: %@",transaction.transactionIdentifier);
+        if([Utils date1IsGreaterOrEqualThan:transaction.transactionDate date2:trans.transactionDate]){
+            trans.transactionDate = transaction.transactionDate;
+            trans.transactionIdentifier = transaction.transactionIdentifier;
+        }
+        //NSLog(@"====");
+        //NSLog(@"transactionDate: %@",[Utils displayDate:trans.transactionDate]);
+        //NSLog(@"transactionIdentifier: %@",trans.transactionIdentifier);
+    }
+    else{
+        trans = [[TransactionInfo alloc] init];
+        trans.productId = transaction.payment.productIdentifier;
+        ProductInfo* productInfo = [[Sdk sharedInstance] findProductInfobyId:trans.productId];
+        trans.purchasedToken = encodedReceipt;
+        trans.transactionIdentifier = transaction.transactionIdentifier;
+        trans.productType = productInfo.productType;
+        trans.transactionDate = transaction.transactionDate;
+        //NSLog(@"transactionDate: %@",[Utils displayDate:trans.transactionDate]);
+        [self.productsRestored addObject:trans];
+    }
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
     
 }
 
+-(TransactionInfo*) productList:(NSMutableArray*) data contain:(NSString*) productId{
+    TransactionInfo* returnItem = nil;
+    for (int i=0; i<[data count]; i++) {
+        TransactionInfo* item = [data objectAtIndex:i];
+        if([item.productId isEqual:productId]){
+            returnItem = item;
+            break;
+        }
+    }
+    return returnItem;
+}
 /// Called when an error occur while restoring purchases. Notifies the user about the error.
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error {
     NSLog(@"restoreCompletedTransactionsFailedWithError...");
@@ -164,6 +231,7 @@
     if (!self.hasRestorablePurchases) {
         //no previous purchases
         [self.delegate didQueryError:QUERY_PRODUCT_NOT_AVAILABLE withError:@"Product is not available"];
+        [self btnClose:NULL];
     }
     else{
         NSMutableArray* transInApp = [[NSMutableArray alloc] init];
@@ -195,7 +263,7 @@
             }
         }
     }
-    [self btnClose:NULL];
+    //[self btnClose:NULL];
 }
 
 -(void)fail:(SKPaymentTransaction*) transaction{

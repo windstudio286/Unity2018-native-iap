@@ -189,6 +189,10 @@
 -(void)payProduct:(NSString *)productId withOfferId:(NSString *)offerID forProductType:(NSString *)productType{
     NSMutableArray* products = [self.dictProducts objectForKey:productType];
     ProductInfo* findProductItem = nil;
+    if(products == NULL){
+        [self showDialogConfirm:[TSLanguageManager localizedString:@"Không có sản phẩm"] withAction:nil];
+        return;
+    }
     if([products count] == 0){
         [self showDialogConfirm:[TSLanguageManager localizedString:@"Không có sản phẩm"] withAction:nil];
         return;
@@ -226,6 +230,7 @@
                                 handler:action];
     [alert addAction:yesButton];
     UIViewController * rootView = [Utils topViewController];
+    [rootView presentViewController:alert animated:YES completion:nil];
 }
 -(void) showPaymentUI:(ProductInfo*)productInfo{
     NSLog(@"showPaymentUI");

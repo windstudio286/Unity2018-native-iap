@@ -15,7 +15,7 @@
 #import "TransactionInfo.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SdkDelegate <NSObject,UIApplicationDelegate>
+@protocol SdkDelegate <NSObject>
 - (void)didPurchaseSuccess:(TransactionInfo *_Nonnull)transaction withProduct:(ProductInfo*) productInfo;
 
 - (void)didPurchaseFailed:(int) errorCode purchaseError:(NSString*_Nullable)error;

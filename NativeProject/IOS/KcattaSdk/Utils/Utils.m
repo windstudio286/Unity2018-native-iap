@@ -19,21 +19,21 @@
 @implementation Utils
 +(UIViewController *)topViewController{
     return [self topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
-    }
+}
 
 +(UIViewController*)topViewControllerWithRootViewController:(UIViewController*)rootViewController {
-        if ([rootViewController isKindOfClass:[UITabBarController class]]) {
-            UITabBarController* tabBarController = (UITabBarController*)rootViewController;
-            return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
-        } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
-            UINavigationController* navigationController = (UINavigationController*)rootViewController;
-            return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
-        } else if (rootViewController.presentedViewController) {
-            UIViewController* presentedViewController = rootViewController.presentedViewController;
-            return [self topViewControllerWithRootViewController:presentedViewController];
-        } else {
-            return rootViewController;
-        }
+    if ([rootViewController isKindOfClass:[UITabBarController class]]) {
+        UITabBarController* tabBarController = (UITabBarController*)rootViewController;
+        return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
+    } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController* navigationController = (UINavigationController*)rootViewController;
+        return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
+    } else if (rootViewController.presentedViewController) {
+        UIViewController* presentedViewController = rootViewController.presentedViewController;
+        return [self topViewControllerWithRootViewController:presentedViewController];
+    } else {
+        return rootViewController;
+    }
 }
 + (BOOL)screenInPortrait{
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
@@ -65,7 +65,7 @@
 +(float)ratioScreen{
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     float maxWidth = MAX(screenRect.size.width* [[UIScreen mainScreen] scale],screenRect.size.height*[[UIScreen mainScreen] scale]);
-
+    
     float maxHeight = MIN(screenRect.size.width*[[UIScreen mainScreen] scale],screenRect.size.height*[[UIScreen mainScreen] scale]);
     
     NSLog(@"Screen in width %f and height %f",maxWidth,maxHeight);
@@ -131,12 +131,12 @@
     return newImage;
 }
 +(void)logMessage:(NSString *)msg{
-//#ifdef DEBUG
-// Something to log your sensitive data here
+    //#ifdef DEBUG
+    // Something to log your sensitive data here
     NSLog(@"%@",msg);
-//#else
-//
-//#endif
+    //#else
+    //
+    //#endif
 }
 +(void)delayAction:(void (^)(void))action withTime:(float) time{
     NSTimeInterval delayInSeconds = time;
@@ -153,13 +153,13 @@
     NSString *propertyName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
     const char * type = property_getAttributes(property);
     NSString *attr = [NSString stringWithCString:type encoding:NSUTF8StringEncoding];
-
+    
     NSString * typeString = [NSString stringWithUTF8String:type];
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
     NSString * typeAttribute = [attributes objectAtIndex:0];
     NSString * propertyType = [typeAttribute substringFromIndex:1];
     const char * rawPropertyType = [propertyType UTF8String];
-
+    
     if (strcmp(rawPropertyType, @encode(float)) == 0) {
         //it's a float
     } else if (strcmp(rawPropertyType, @encode(int)) == 0) {
@@ -169,7 +169,7 @@
     } else {
         // According to Apples Documentation you can determine the corresponding encoding values
     }
-
+    
     if ([typeAttribute hasPrefix:@"T@"]) {
         NSString * typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];  //turns @"NSDate" into NSDate
         Class typeClass = NSClassFromString(typeClassName);
@@ -200,4 +200,25 @@
                                                           timeStyle:NSDateFormatterFullStyle];
     return dateString;
 }
++(BOOL)date1IsGreaterOrEqualThan:(NSDate *)date1 date2:(NSDate *)date2{
+    BOOL isGreaterOrEqual = FALSE;
+    NSComparisonResult result = [date1 compare:date2];
+    
+    if(result==NSOrderedAscending){
+        isGreaterOrEqual = FALSE;
+        //NSLog(@"Date1 is less than Date2");
+    }
+    
+    else if(result==NSOrderedDescending){
+        isGreaterOrEqual = TRUE;
+        //NSLog(@"Date1 is greater than Date2");
+    }
+    
+    else{
+        isGreaterOrEqual = TRUE;
+        //NSLog(@"Both dates are the same");
+    }
+    return isGreaterOrEqual;
+}
+
 @end

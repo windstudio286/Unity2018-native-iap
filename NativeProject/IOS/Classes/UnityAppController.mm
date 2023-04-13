@@ -469,15 +469,37 @@ extern "C" void UnityRequestQuit()
 }
 -(void)didPurchaseSuccess:(TransactionInfo *)transaction withProduct:(ProductInfo *)productInfo{
     NSLog(@"didPurchaseSuccess");
+    NSLog(@"transInfo.productId: %@",transaction.productId);
+    NSLog(@"productInfo.productType: %@",productInfo.productType);
+    NSLog(@"transInfo.productType: %@",transaction.productType);
+    NSLog(@"transInfo.purchasedToken: %@",transaction.purchasedToken);
+    NSLog(@"transInfo.transactionIdentifier: %@",transaction.transactionIdentifier);
+    NSLog(@"transInfo.transactionDate: %@",[Utils displayDate:transaction.transactionDate]);
 }
 -(void)didPurchaseFailed:(int)errorCode purchaseError:(NSString *)error{
     NSLog(@"didPurchaseFailed");
 }
 -(void)didQueryProductInApp:(NSArray<TransactionInfo *> *)listTrans{
     NSLog(@"didQueryProductInApp");
+    for (int j=0; j< listTrans.count; j++) {
+        TransactionInfo* transInfo = [listTrans objectAtIndex:j];
+        NSLog(@"transInfo.productId: %@",transInfo.productId);
+        NSLog(@"transInfo.productType: %@",transInfo.productType);
+        NSLog(@"transInfo.purchasedToken: %@",transInfo.purchasedToken);
+        NSLog(@"transInfo.transactionIdentifier: %@",transInfo.transactionIdentifier);
+        NSLog(@"transInfo.transactionDate: %@",[Utils displayDate:transInfo.transactionDate]);
+    }
 }
 -(void)didQueryProductSubs:(NSArray<TransactionInfo *> *)listTrans{
     NSLog(@"didQueryProductSubs");
+    for (int j=0; j< listTrans.count; j++) {
+        TransactionInfo* transInfo = [listTrans objectAtIndex:j];
+        NSLog(@"transInfo.productId: %@",transInfo.productId);
+        NSLog(@"transInfo.productType: %@",transInfo.productType);
+        NSLog(@"transInfo.purchasedToken: %@",transInfo.purchasedToken);
+        NSLog(@"transInfo.transactionIdentifier: %@",transInfo.transactionIdentifier);
+        NSLog(@"transInfo.transactionDate: %@",[Utils displayDate:transInfo.transactionDate]);
+    }
 }
 -(void)didQueryError:(int)errorCode withError:(NSString *)error{
     NSLog(@"didQueryError %@",error);

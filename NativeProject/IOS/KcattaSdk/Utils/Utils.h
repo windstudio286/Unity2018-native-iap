@@ -23,4 +23,6 @@
 +(Class) getClassofProperty:(Class) aClass withProperty:(NSString*) nameProperty;
 +(NSString *)typeForProperty:(NSString *)property andClass:(Class) aClass;
 +(NSString*) displayDate:(NSDate*) date;
++(BOOL) date1IsGreaterOrEqualThan:(NSDate*) date1 date2:(NSDate*) date2;
+
 @end
