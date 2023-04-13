@@ -13,4 +13,5 @@ Trên Android 12 thì cần chọn Write Permission là External (SDCard)
 - https://documentation.onesignal.com/docs/ios-sdk-setup
 <br/>
 Khi add Notification Extension nhớ để lại Deployment Version
+
 ![Setttings4](./Settings4.png)
