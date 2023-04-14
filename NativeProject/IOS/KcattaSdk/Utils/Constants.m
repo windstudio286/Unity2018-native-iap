@@ -24,6 +24,10 @@ NSString *const PRODUCT_TYPE = @"productType";
 NSString *const PAYMENT = @"PAYMENT";
 NSString *const RESTORE = @"RESTORE";
 
+NSString *const ADS_TYPE_BANNER = @"bannerAd";
+NSString *const ADS_TYPE_INTERSTITIAL = @"interstitialAd";
+NSString *const ADS_TYPE_REWARDED = @"rewardedAd";
+
 int QUERY_PRODUCT_NOT_AVAILABLE = -99;
 int NO_INTERNET_CONNECTION = -100;
 @end

@@ -295,6 +295,7 @@ extern "C" void UnityRequestQuit()
 
     AppInfo * app = [[AppInfo alloc] init];
     app.oneSignalId = @"509fba34-5690-491b-9bda-276958ff3881";
+    app.testDeviceIdentifiers =  @[ @"8ee64bbf437e7d37436ae6addf599226" ];
     [[Sdk sharedInstance] initWithDelegate:self appInfo:app application:application launchOptions:launchOptions];
     
     return YES;
@@ -504,6 +505,22 @@ extern "C" void UnityRequestQuit()
 }
 -(void)didQueryError:(int)errorCode withError:(NSString *)error{
     NSLog(@"didQueryError %@",error);
+}
+-(void)onAdLoaded:(NSString *)adType withAdId:(NSString *)adId{
+    NSLog(@"onAdLoaded adType: %@ withAdId: %@",adType,adId);
+}
+-(void)onAdFailedToLoad:(NSString *)adType withAdId:(NSString *)adId withError:(NSError *)error{
+    NSLog(@"onAdFailedToLoad adType: %@ withAdId: %@",adType,adId);
+    NSLog(@"onAdFailedToLoad: %@",[error localizedDescription]);
+}
+-(void)onAdOpened:(NSString *)adType withAdId:(NSString *)adId{
+    NSLog(@"onAdOpened adType: %@ withAdId: %@",adType,adId);
+}
+-(void)onAdClosed:(NSString *)adType withAdId:(NSString *)adId{
+    NSLog(@"onAdClosed adType: %@ withAdId: %@",adType,adId);
+}
+-(void)onAdEarnedReward:(NSString *)adType withAdId:(NSString *)adId withAmount:(int)amount{
+    NSLog(@"onAdEarnedReward adType: %@ withAdId: %@ withAmount: %ld",adType,adId,amount);
 }
 @end
 

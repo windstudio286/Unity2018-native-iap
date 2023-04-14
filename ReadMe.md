@@ -15,3 +15,9 @@ Trên Android 12 thì cần chọn Write Permission là External (SDCard)
 Khi add Notification Extension nhớ để lại Deployment Version
 
 ![Setttings4](./Settings4.png)
+
+## Configuration Google Ads
+- https://developers.google.com/admob/ios/quick-start
+<br/>
+
+Chuyển Enable Bitcode = NO;

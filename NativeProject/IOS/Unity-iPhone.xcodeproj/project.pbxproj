@@ -181,6 +181,7 @@
 		F60E4217A0B63E71B67ED504 /* Il2CppCompilerCalculateTypeValues_17Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4264242B58B3F3A10AD9788 /* Il2CppCompilerCalculateTypeValues_17Table.cpp */; };
 		F81C721129E8658F00E1DBFF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = F81C721029E8658F00E1DBFF /* NotificationService.m */; };
 		F81C721529E8658F00E1DBFF /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F81C720D29E8658F00E1DBFF /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F81C721C29E9449400E1DBFF /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F81C721B29E9449300E1DBFF /* AppTrackingTransparency.framework */; };
 		F855AE3929D7BE0100A1040C /* NativeWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F855AE3829D7BE0100A1040C /* NativeWrapper.mm */; };
 		F855AE3D29D9428500A1040C /* Sdk.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE3C29D9428500A1040C /* Sdk.m */; };
 		F855AE4129D942B700A1040C /* ProductInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE4029D942B700A1040C /* ProductInfo.m */; };
@@ -489,6 +490,7 @@
 		F81C720F29E8658F00E1DBFF /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
 		F81C721029E8658F00E1DBFF /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		F81C721229E8658F00E1DBFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F81C721B29E9449300E1DBFF /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
 		F855AE3529D7BDE400A1040C /* NativeWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeWrapper.h; sourceTree = "<group>"; };
 		F855AE3829D7BE0100A1040C /* NativeWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NativeWrapper.mm; sourceTree = "<group>"; };
 		F855AE3B29D9428500A1040C /* Sdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sdk.h; sourceTree = "<group>"; };
@@ -542,6 +544,7 @@
 				8A20382D213D4B3C005E6C56 /* AVKit.framework in Frameworks */,
 				56FD43960ED4745200FE3770 /* CFNetwork.framework in Frameworks */,
 				56B7959B1442E0F20026B3DD /* CoreGraphics.framework in Frameworks */,
+				F81C721C29E9449400E1DBFF /* AppTrackingTransparency.framework in Frameworks */,
 				7F36C11113C5C673007FBDD9 /* CoreMedia.framework in Frameworks */,
 				56B7960F1442E1770026B3DD /* CoreMotion.framework in Frameworks */,
 				7F36C11213C5C673007FBDD9 /* CoreVideo.framework in Frameworks */,
@@ -609,6 +612,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F81C721B29E9449300E1DBFF /* AppTrackingTransparency.framework */,
 				F855AE4329D948C300A1040C /* StoreKit.framework */,
 				8A20382C213D4B3C005E6C56 /* AVKit.framework */,
 				5BAD78601F2B5A59006103DE /* Security.framework */,
@@ -1209,6 +1213,9 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Unity-iPhone/Pods-Unity-iPhone-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OneSignalXCFramework/OneSignal.framework/OneSignal",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OneSignalXCFramework/OneSignalCore/OneSignalCore.framework/OneSignalCore",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OneSignalXCFramework/OneSignalExtension/OneSignalExtension.framework/OneSignalExtension",
@@ -1216,6 +1223,9 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OneSignal.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OneSignalCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OneSignalExtension.framework",
@@ -1457,7 +1467,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2PGDWKPY7G;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
@@ -1530,7 +1540,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2PGDWKPY7G;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1620,7 +1630,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2PGDWKPY7G;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1709,7 +1719,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 2PGDWKPY7G;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

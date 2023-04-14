@@ -13,6 +13,7 @@
 #import "TSLanguageManager.h"
 #import "Utils.h"
 #import "TransactionInfo.h"
+#import <OneSignal/OneSignal.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol SdkDelegate <NSObject>
@@ -31,6 +32,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didQueryProductSubs:(NSArray<TransactionInfo*>*) listTrans;
 
 - (void)didQueryError:(int) errorCode withError:(NSString*_Nullable)error;
+
+@optional
+- (void)onAdLoaded:(NSString*) adType withAdId:(NSString*_Nullable) adId;
+- (void)onAdFailedToLoad:(NSString*) adType withAdId:(NSString*_Nullable) adId withError:(NSError*) error;
+- (void)onAdOpened:(NSString*) adType withAdId:(NSString*_Nullable) adId;
+- (void)onAdClosed:(NSString*) adType withAdId:(NSString*_Nullable) adId;
+- (void)onAdEarnedReward:(NSString*) adType withAdId:(NSString*_Nullable) adId withAmount:(int) amount;
 @end
 
 @interface Sdk : NSObject
@@ -48,6 +56,14 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSDictionary*) getDictProducts;
 -(ProductInfo*) findProductInfobyId:(NSString*) productId;
 -(NSString*) getOneSignalUserId;
+-(void) postOneSignalNotification:(NSString*) jsonString onSuccess:(OSResultSuccessBlock _Nullable)successBlock onFailure:(OSFailureBlock _Nullable)failureBlock;
+- (void)loadBanner:(NSString*) adUnitId;
+- (void)loadInterstitialAd:(NSString*) adUnitId;
+- (void)loadRewardedAd:(NSString*) adUnitId;
+- (void)showBanner;
+- (void)hideBanner;
+- (void)showRewarded;
+- (void)showInterstitial;
 @end
 
 NS_ASSUME_NONNULL_END

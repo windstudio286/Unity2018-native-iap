@@ -28,6 +28,10 @@ extern NSString *const RESTORE;
 
 extern int QUERY_PRODUCT_NOT_AVAILABLE;
 extern int NO_INTERNET_CONNECTION;
+
+extern NSString *const ADS_TYPE_BANNER;
+extern NSString *const ADS_TYPE_INTERSTITIAL;
+extern NSString *const ADS_TYPE_REWARDED;
 @end
 
 NS_ASSUME_NONNULL_END

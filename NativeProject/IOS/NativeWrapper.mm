@@ -33,20 +33,42 @@ void sendDataFromUnity (const char* key, const char* value)
         item3.productType = PRODUCT_TYPE_SUBS;
         [list2Products addObject:item3];
         
+        //get list product
+        //[[Sdk sharedInstance] requestPriceProduct:[listProducts copy] withType:PRODUCT_TYPE_INAPP];
+        //[[Sdk sharedInstance] requestPriceProduct:[list2Products copy] withType:PRODUCT_TYPE_SUBS];
         
-        [[Sdk sharedInstance] requestPriceProduct:[listProducts copy] withType:PRODUCT_TYPE_INAPP];
-        [[Sdk sharedInstance] requestPriceProduct:[list2Products copy] withType:PRODUCT_TYPE_SUBS];
+        //load ads banner
+        //[[Sdk sharedInstance] loadBanner:@"ca-app-pub-3940256099942544/2934735716"];
+        
+        //load interstital
+        //[[Sdk sharedInstance] loadInterstitialAd:@"ca-app-pub-3940256099942544/5135589807"];
+        
+        //load reward
+        [[Sdk sharedInstance] loadRewardedAd:@"ca-app-pub-3940256099942544/1712485313"];
     }
     if([keyStr isEqual:@"PAY_PRODUCT"]){
-        [[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000i.noads" withOfferId:nil forProductType:PRODUCT_TYPE_INAPP];
+        //[[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000i.noads" withOfferId:nil forProductType:PRODUCT_TYPE_INAPP];
         //[[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000a.subs2" withOfferId:nil forProductType:PRODUCT_TYPE_SUBS];
+        
+        //show banner
+        //[[Sdk sharedInstance] showBanner];
+        
+        //show interstital
+        //[[Sdk sharedInstance] showInterstitial];
+        
+        //show reward
+        [[Sdk sharedInstance] showRewarded];
     }
     if([keyStr isEqual:@"UPGRADE_PRODUCT"]){
-        [[Sdk sharedInstance] restoreProducts];
+        //[[Sdk sharedInstance] restoreProducts];
+        
+        //hide banner
+        [[Sdk sharedInstance] hideBanner];
     }
     if([keyStr isEqual:@"DOWNGRADE_PRODUCT"]){
         [[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000a.subs2" withOfferId:nil forProductType:PRODUCT_TYPE_SUBS];
     }
+    //Send from native to unity object
     //UnitySendMessage("Main Camera","setTextFromNative","[{}]");
 }
 @end
