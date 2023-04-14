@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 @interface Utils : NSObject
 + (UIViewController*) topViewController;
++ (NSString*) getDeviceId;
 + (BOOL) screenInPortrait;
 + (UIView*) loadViewFromNibFile:(Class) aClass withNib:(NSString*) name;
 + (UIView*) loadViewFromNibFile:(Class) aClass universalWithNib:(NSString*) name;
@@ -24,5 +25,5 @@
 +(NSString *)typeForProperty:(NSString *)property andClass:(Class) aClass;
 +(NSString*) displayDate:(NSDate*) date;
 +(BOOL) date1IsGreaterOrEqualThan:(NSDate*) date1 date2:(NSDate*) date2;
-
++ (NSString *) md5str: ( NSString *) str;
 @end

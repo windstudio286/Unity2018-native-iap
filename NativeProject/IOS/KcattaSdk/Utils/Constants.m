@@ -9,6 +9,8 @@
 
 @implementation Constants
 
+NSString * const  KEY_DEVICE_ID = @"KEY_DEVICE_ID";
+
 NSString *const JSON_KEY = @"key";
 NSString *const JSON_VALUE = @"value";
 NSString *const JSON_RECEIVED_OBJECT = @"receivedObject";

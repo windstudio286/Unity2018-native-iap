@@ -182,6 +182,8 @@
 		F81C721129E8658F00E1DBFF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = F81C721029E8658F00E1DBFF /* NotificationService.m */; };
 		F81C721529E8658F00E1DBFF /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F81C720D29E8658F00E1DBFF /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F81C721C29E9449400E1DBFF /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F81C721B29E9449300E1DBFF /* AppTrackingTransparency.framework */; };
+		F81C721E29E9A8E600E1DBFF /* Keychain in Resources */ = {isa = PBXBuildFile; fileRef = F81C721D29E9A8E600E1DBFF /* Keychain */; };
+		F81C721F29E9A8F900E1DBFF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BAD78601F2B5A59006103DE /* Security.framework */; };
 		F855AE3929D7BE0100A1040C /* NativeWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F855AE3829D7BE0100A1040C /* NativeWrapper.mm */; };
 		F855AE3D29D9428500A1040C /* Sdk.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE3C29D9428500A1040C /* Sdk.m */; };
 		F855AE4129D942B700A1040C /* ProductInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE4029D942B700A1040C /* ProductInfo.m */; };
@@ -491,6 +493,7 @@
 		F81C721029E8658F00E1DBFF /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		F81C721229E8658F00E1DBFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F81C721B29E9449300E1DBFF /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
+		F81C721D29E9A8E600E1DBFF /* Keychain */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Keychain; sourceTree = "<group>"; };
 		F855AE3529D7BDE400A1040C /* NativeWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeWrapper.h; sourceTree = "<group>"; };
 		F855AE3829D7BE0100A1040C /* NativeWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NativeWrapper.mm; sourceTree = "<group>"; };
 		F855AE3B29D9428500A1040C /* Sdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sdk.h; sourceTree = "<group>"; };
@@ -536,6 +539,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BAD78611F2B5A59006103DE /* Security.framework in Frameworks */,
+				F81C721F29E9A8F900E1DBFF /* Security.framework in Frameworks */,
 				960391221D6CE46E003BF157 /* MediaToolbox.framework in Frameworks */,
 				00000000008063A1000160D3 /* libiPhone-lib.a in Frameworks */,
 				AA5D99871AFAD3C800B27605 /* CoreText.framework in Frameworks */,
@@ -970,6 +974,7 @@
 		F855AE4229D9437400A1040C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				F81C721D29E9A8E600E1DBFF /* Keychain */,
 				F855AE6329DADB3D00A1040C /* TSLanguageManager.h */,
 				F855AE6129DADB3D00A1040C /* TSLanguageManager.m */,
 				F855AE6229DADB3D00A1040C /* Utils.h */,
@@ -1135,6 +1140,7 @@
 				29F74568A0E1F003BBA9BD42 /* LaunchScreen-iPhoneLandscape.png in Resources */,
 				D3A14FA3BCBE725A6956BEA3 /* LaunchScreen-iPad.storyboard in Resources */,
 				EF704BDE916865D62EDC56BE /* LaunchScreen-iPad.png in Resources */,
+				F81C721E29E9A8E600E1DBFF /* Keychain in Resources */,
 				F855AE7729DAE35F00A1040C /* PaymentView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

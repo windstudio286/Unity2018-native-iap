@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Constants : NSObject
 
+extern NSString * const KEY_DEVICE_ID;
 extern NSString *const JSON_KEY;
 extern NSString *const JSON_VALUE;
 extern NSString *const JSON_RECEIVED_OBJECT;

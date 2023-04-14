@@ -12,6 +12,7 @@
 #import <CommonCrypto/CommonHMAC.h>
 #import "Sdk.h"
 #import "AppInfo.h"
+#import "Keychain/Keychain.h"
 #define SERVICE_NAME @"SECRET_AUTH"
 #define CC_MD5_DIGEST_LENGTH    16          /* digest length in bytes */
 #define CC_MD5_BLOCK_BYTES      64          /* block size in bytes */
@@ -34,6 +35,49 @@
     } else {
         return rootViewController;
     }
+}
++(NSString *)getDeviceId{
+    Keychain *keychain = [[Keychain alloc] initWithService:SERVICE_NAME withGroup:nil];
+    
+    NSString *deviceId = nil;
+    if(keychain != NULL){
+        
+        NSData * data =[keychain find:KEY_DEVICE_ID];
+        if(data == nil)
+        {
+            [self logMessage:@"deviceID not found. Now, It's create new one"];
+            deviceId =[[[[UIDevice currentDevice] identifierForVendor] UUIDString] lowercaseString];
+            NSData *value = [deviceId dataUsingEncoding:NSUTF8StringEncoding];
+             
+            if([keychain insert:KEY_DEVICE_ID :value])
+             {
+                 [self logMessage:@"Successfully added data"];
+             }
+             else
+                 [self logMessage:@"Failed to add data"];
+        }
+        else
+        {
+            deviceId = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            deviceId = [self md5str:deviceId];
+        }
+    }
+    [self logMessage:[NSString stringWithFormat:@"deviceID : %@",deviceId]];
+    return deviceId;
+}
++(NSString *)md5str:(NSString *)str{
+    const char *cStr = [str UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5( cStr, strlen(cStr), result );
+    NSString* temp = [NSString  stringWithFormat:
+                      @"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+                      result[0], result[1], result[2], result[3], result[4],
+                      result[5], result[6], result[7],
+                      result[8], result[9], result[10], result[11], result[12],
+                      result[13], result[14], result[15]
+                      ];
+    //  temp = [temp substringToIndex:16];
+    return [temp lowercaseString];
 }
 + (BOOL)screenInPortrait{
     UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
