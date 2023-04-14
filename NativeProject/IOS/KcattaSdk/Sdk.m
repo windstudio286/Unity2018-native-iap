@@ -85,6 +85,9 @@
     if(self.appInfo.testDeviceIdentifiers != NULL){
         GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = self.appInfo.testDeviceIdentifiers;
     }
+    if(self.appInfo != NULL){
+        [GADMobileAds.sharedInstance.requestConfiguration tagForChildDirectedTreatment:self.appInfo.tagForChildDirectedTreatment];
+    }
 }
 - (void)sendLaunch:(NSString *)applicationState {
     if(!isInited){

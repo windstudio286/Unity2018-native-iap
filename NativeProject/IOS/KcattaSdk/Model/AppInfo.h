@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AppInfo : NSObject
 @property (nonatomic,strong) NSString *oneSignalId;
 @property (nonatomic,strong) NSArray<NSString *> *testDeviceIdentifiers;
+@property BOOL tagForChildDirectedTreatment;
 @end
 
 NS_ASSUME_NONNULL_END
