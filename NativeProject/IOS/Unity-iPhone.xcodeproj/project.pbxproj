@@ -182,8 +182,8 @@
 		F81C721129E8658F00E1DBFF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = F81C721029E8658F00E1DBFF /* NotificationService.m */; };
 		F81C721529E8658F00E1DBFF /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F81C720D29E8658F00E1DBFF /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F81C721C29E9449400E1DBFF /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F81C721B29E9449300E1DBFF /* AppTrackingTransparency.framework */; };
-		F81C721E29E9A8E600E1DBFF /* Keychain in Resources */ = {isa = PBXBuildFile; fileRef = F81C721D29E9A8E600E1DBFF /* Keychain */; };
 		F81C721F29E9A8F900E1DBFF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BAD78601F2B5A59006103DE /* Security.framework */; };
+		F82C54B329F3B52F00694B96 /* Keychain.m in Sources */ = {isa = PBXBuildFile; fileRef = F82C54B229F3B52F00694B96 /* Keychain.m */; };
 		F855AE3929D7BE0100A1040C /* NativeWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = F855AE3829D7BE0100A1040C /* NativeWrapper.mm */; };
 		F855AE3D29D9428500A1040C /* Sdk.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE3C29D9428500A1040C /* Sdk.m */; };
 		F855AE4129D942B700A1040C /* ProductInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F855AE4029D942B700A1040C /* ProductInfo.m */; };
@@ -493,7 +493,8 @@
 		F81C721029E8658F00E1DBFF /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		F81C721229E8658F00E1DBFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F81C721B29E9449300E1DBFF /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
-		F81C721D29E9A8E600E1DBFF /* Keychain */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Keychain; sourceTree = "<group>"; };
+		F82C54B129F3B52F00694B96 /* Keychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keychain.h; sourceTree = "<group>"; };
+		F82C54B229F3B52F00694B96 /* Keychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Keychain.m; sourceTree = "<group>"; };
 		F855AE3529D7BDE400A1040C /* NativeWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeWrapper.h; sourceTree = "<group>"; };
 		F855AE3829D7BE0100A1040C /* NativeWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NativeWrapper.mm; sourceTree = "<group>"; };
 		F855AE3B29D9428500A1040C /* Sdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sdk.h; sourceTree = "<group>"; };
@@ -945,6 +946,15 @@
 			path = OneSignalNotificationServiceExtension;
 			sourceTree = "<group>";
 		};
+		F82C54B029F3B52F00694B96 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				F82C54B129F3B52F00694B96 /* Keychain.h */,
+				F82C54B229F3B52F00694B96 /* Keychain.m */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
 		F855AE3A29D915C100A1040C /* KcattaSdk */ = {
 			isa = PBXGroup;
 			children = (
@@ -974,7 +984,7 @@
 		F855AE4229D9437400A1040C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				F81C721D29E9A8E600E1DBFF /* Keychain */,
+				F82C54B029F3B52F00694B96 /* Keychain */,
 				F855AE6329DADB3D00A1040C /* TSLanguageManager.h */,
 				F855AE6129DADB3D00A1040C /* TSLanguageManager.m */,
 				F855AE6229DADB3D00A1040C /* Utils.h */,
@@ -1140,7 +1150,6 @@
 				29F74568A0E1F003BBA9BD42 /* LaunchScreen-iPhoneLandscape.png in Resources */,
 				D3A14FA3BCBE725A6956BEA3 /* LaunchScreen-iPad.storyboard in Resources */,
 				EF704BDE916865D62EDC56BE /* LaunchScreen-iPad.png in Resources */,
-				F81C721E29E9A8E600E1DBFF /* Keychain in Resources */,
 				F855AE7729DAE35F00A1040C /* PaymentView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1318,6 +1327,7 @@
 				F855AE4A29D9C6CC00A1040C /* Constants.m in Sources */,
 				BA6F41928C52DEA500E313BB /* Bulk_Generics_8.cpp in Sources */,
 				65D84D0AB591168E3AEC84B8 /* Bulk_Generics_9.cpp in Sources */,
+				F82C54B329F3B52F00694B96 /* Keychain.m in Sources */,
 				E09F45458AF981F54AE3CE50 /* Bulk_Mono.Security_0.cpp in Sources */,
 				34544564B8C3A7C5478F5D9A /* Bulk_System.Configuration_0.cpp in Sources */,
 				54AF4C13AA7F1EBAFC22E54C /* Bulk_System.Core_0.cpp in Sources */,

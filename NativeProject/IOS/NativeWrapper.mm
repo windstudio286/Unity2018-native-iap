@@ -29,13 +29,23 @@ void sendDataFromUnity (const char* key, const char* value)
         NSMutableArray* list2Products = [[NSMutableArray alloc] init];
         
         ProductInfo* item3 = [[ProductInfo alloc] init];
-        item3.productId = @"vn.vplay.sdk.t000a.subs2";
+        item3.productId = @"vn.vplay.sdk.t000a.subs1";
         item3.productType = PRODUCT_TYPE_SUBS;
         [list2Products addObject:item3];
         
+        ProductInfo* item4 = [[ProductInfo alloc] init];
+        item4.productId = @"vn.vplay.sdk.t000a.subs2";
+        item4.productType = PRODUCT_TYPE_SUBS;
+        [list2Products addObject:item4];
+        
+        ProductInfo* item5 = [[ProductInfo alloc] init];
+        item5.productId = @"vn.vplay.sdk.t000a.subs21";
+        item5.productType = PRODUCT_TYPE_SUBS;
+        [list2Products addObject:item5];
+        
         //get list product
-        //[[Sdk sharedInstance] requestPriceProduct:[listProducts copy] withType:PRODUCT_TYPE_INAPP];
-        //[[Sdk sharedInstance] requestPriceProduct:[list2Products copy] withType:PRODUCT_TYPE_SUBS];
+        [[Sdk sharedInstance] requestPriceProduct:[listProducts copy] withType:PRODUCT_TYPE_INAPP];
+        [[Sdk sharedInstance] requestPriceProduct:[list2Products copy] withType:PRODUCT_TYPE_SUBS];
         
         //load ads banner
         //[[Sdk sharedInstance] loadBanner:@"ca-app-pub-3940256099942544/2934735716"];
@@ -44,11 +54,11 @@ void sendDataFromUnity (const char* key, const char* value)
         //[[Sdk sharedInstance] loadInterstitialAd:@"ca-app-pub-3940256099942544/5135589807"];
         
         //load reward
-        [[Sdk sharedInstance] loadRewardedAd:@"ca-app-pub-3940256099942544/1712485313"];
+        //[[Sdk sharedInstance] loadRewardedAd:@"ca-app-pub-3940256099942544/1712485313"];
     }
     if([keyStr isEqual:@"PAY_PRODUCT"]){
         //[[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000i.noads" withOfferId:nil forProductType:PRODUCT_TYPE_INAPP];
-        //[[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000a.subs2" withOfferId:nil forProductType:PRODUCT_TYPE_SUBS];
+        [[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000a.subs21" withOfferId:nil forProductType:PRODUCT_TYPE_SUBS];
         
         //show banner
         //[[Sdk sharedInstance] showBanner];
@@ -60,13 +70,15 @@ void sendDataFromUnity (const char* key, const char* value)
         [[Sdk sharedInstance] showRewarded];
     }
     if([keyStr isEqual:@"UPGRADE_PRODUCT"]){
+        [[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000a.subs2" withOfferId:nil forProductType:PRODUCT_TYPE_SUBS];
         //[[Sdk sharedInstance] restoreProducts];
         
         //hide banner
-        [[Sdk sharedInstance] hideBanner];
+        //[[Sdk sharedInstance] hideBanner];
     }
     if([keyStr isEqual:@"DOWNGRADE_PRODUCT"]){
-        [[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000a.subs2" withOfferId:nil forProductType:PRODUCT_TYPE_SUBS];
+        //[[Sdk sharedInstance] payProduct:@"vn.vplay.sdk.t000a.subs2" withOfferId:nil forProductType:PRODUCT_TYPE_SUBS];
+        [[Sdk sharedInstance] restoreProducts];
     }
     //Send from native to unity object
     //UnitySendMessage("Main Camera","setTextFromNative","[{}]");
