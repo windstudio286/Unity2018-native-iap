@@ -14,8 +14,8 @@
 
 @interface Sdk()<SKProductsRequestDelegate,GADBannerViewDelegate,GADFullScreenContentDelegate>
 
-@property (nonatomic, weak) id<SdkDelegate> delegate;
-@property (nonatomic, weak) UIApplication* uiApplicaion;
+@property (nonatomic, strong) id<SdkDelegate> delegate;
+@property (nonatomic, strong) UIApplication* uiApplicaion;
 @property (nonatomic, strong) NSMutableDictionary* dictProducts;
 @property (nonatomic, strong) AppInfo* appInfo;
 //declare ads
@@ -48,9 +48,6 @@
     }
     return self;
 }
--(void)dealloc{
-    
-}
 -(void)initWithDelegate:(id<SdkDelegate>)delegate appInfo:(AppInfo *)appInfo application:(UIApplication *)application launchOptions:(NSDictionary *)launchOptions{
     
     self.delegate = delegate;
@@ -63,6 +60,10 @@
     // OneSignal initialization
     [OneSignal initWithLaunchOptions:launchOptions];
     [OneSignal setAppId:appInfo.oneSignalId];
+    //Init Firebase
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info" ofType:@"plist"];
+    FIROptions *options = [[FIROptions alloc] initWithContentsOfFile:filePath];
+    [FIRApp configureWithOptions:options];
     
     if(appInfo != nil){
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -566,6 +567,10 @@
     } else {
         NSLog(@"Ad wasn't ready");
     }
+}
+-(void)trackingEvent:(NSString *)eventName withParams:(NSDictionary *)params{
+    [FIRAnalytics logEventWithName:eventName
+                        parameters:params];
 }
 ///
 /// implement GADBannerViewDelegate

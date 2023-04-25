@@ -202,6 +202,7 @@
 		F855AE7729DAE35F00A1040C /* PaymentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F855AE7529DAE35F00A1040C /* PaymentView.xib */; };
 		F87842D2BDF9B8A08217898D /* Bulk_UnityEngine.CoreModule_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 670D4F9188B1675E4FBE21E6 /* Bulk_UnityEngine.CoreModule_0.cpp */; };
 		F8A7AC9329DC194D00ED221C /* TransactionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F8A7AC9129DC194D00ED221C /* TransactionInfo.m */; };
+		F8D1CB2829F8398100DF7810 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F8D1CB2729F8398100DF7810 /* GoogleService-Info.plist */; };
 		F8DE49D0A381B1E86E7F1BD8 /* Bulk_mscorlib_16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E0DD419FBCA186A089EA96E6 /* Bulk_mscorlib_16.cpp */; };
 		F913470988C467C6A93D01A6 /* Il2CppCompilerCalculateTypeValues_14Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 337E47E984D0F2FA4AFAC113 /* Il2CppCompilerCalculateTypeValues_14Table.cpp */; };
 		F99D4B3FAFDD8FC264771164 /* Il2CppGenericMethodPointerTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D2E343FFBDB10A2133AFDCBC /* Il2CppGenericMethodPointerTable.cpp */; };
@@ -526,6 +527,7 @@
 		F855AE7529DAE35F00A1040C /* PaymentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentView.xib; sourceTree = "<group>"; };
 		F8A7AC9129DC194D00ED221C /* TransactionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionInfo.m; sourceTree = "<group>"; };
 		F8A7AC9229DC194D00ED221C /* TransactionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionInfo.h; sourceTree = "<group>"; };
+		F8D1CB2729F8398100DF7810 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FA254E728366C5F348A70C96 /* UnresolvedVirtualCallStubs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UnresolvedVirtualCallStubs.cpp; path = Classes/Native/UnresolvedVirtualCallStubs.cpp; sourceTree = SOURCE_ROOT; };
 		FC0B20A11B7A4F0B00FDFC55 /* OnDemandResources.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OnDemandResources.mm; sourceTree = "<group>"; };
 		FC3D7EBE16D2621600D1BD0D /* CrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrashReporter.h; sourceTree = "<group>"; };
@@ -590,6 +592,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				F8D1CB2729F8398100DF7810 /* GoogleService-Info.plist */,
 				F81C720829E85BB900E1DBFF /* Unity-iPhone.entitlements */,
 				F855AE3A29D915C100A1040C /* KcattaSdk */,
 				F855AE3829D7BE0100A1040C /* NativeWrapper.mm */,
@@ -1149,6 +1152,7 @@
 				97474585B0AA8D7CC4006638 /* LaunchScreen-iPhonePortrait.png in Resources */,
 				29F74568A0E1F003BBA9BD42 /* LaunchScreen-iPhoneLandscape.png in Resources */,
 				D3A14FA3BCBE725A6956BEA3 /* LaunchScreen-iPad.storyboard in Resources */,
+				F8D1CB2829F8398100DF7810 /* GoogleService-Info.plist in Resources */,
 				EF704BDE916865D62EDC56BE /* LaunchScreen-iPad.png in Resources */,
 				F855AE7729DAE35F00A1040C /* PaymentView.xib in Resources */,
 			);
@@ -1228,6 +1232,10 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Unity-iPhone/Pods-Unity-iPhone-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -1238,6 +1246,10 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreDiagnostics.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",

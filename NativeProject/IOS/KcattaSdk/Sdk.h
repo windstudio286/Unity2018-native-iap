@@ -14,6 +14,8 @@
 #import "Utils.h"
 #import "TransactionInfo.h"
 #import <OneSignal/OneSignal.h>
+#import <FirebaseCore/FirebaseCore.h>
+#import <FirebaseAnalytics/FirebaseAnalytics.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol SdkDelegate <NSObject>
@@ -64,6 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)hideBanner;
 - (void)showRewarded;
 - (void)showInterstitial;
+-(void) trackingEvent:(NSString*) eventName withParams:(NSDictionary*) params;
+
 @end
 
 NS_ASSUME_NONNULL_END
