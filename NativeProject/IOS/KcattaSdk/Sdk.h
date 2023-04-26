@@ -41,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onAdOpened:(NSString*) adType withAdId:(NSString*_Nullable) adId;
 - (void)onAdClosed:(NSString*) adType withAdId:(NSString*_Nullable) adId;
 - (void)onAdEarnedReward:(NSString*) adType withAdId:(NSString*_Nullable) adId withAmount:(int) amount;
+- (void)onAllowATT;
+- (void)onDisallowATT;
 @end
 
 @interface Sdk : NSObject
@@ -67,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showRewarded;
 - (void)showInterstitial;
 -(void) trackingEvent:(NSString*) eventName withParams:(NSDictionary*) params;
-
+-(NSString*) getSubscriptionPrice:(NSString*) productId withBasePlanId:(NSString*) basePlanId withOfferId:(NSString*) offerId;
 @end
 
 NS_ASSUME_NONNULL_END

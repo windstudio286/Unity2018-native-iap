@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 //consumable; non-consumable; subs
 @property (nonatomic,strong) NSString *productType;
 @property (nonatomic,strong) NSString *productId;
+@property (nonatomic,strong) NSString *productName;
 @property (nonatomic,strong) NSString *productDescription;
 @property (nonatomic,strong) NSDecimalNumber *price;
 @property (nonatomic,strong) NSString *localizedPrice;

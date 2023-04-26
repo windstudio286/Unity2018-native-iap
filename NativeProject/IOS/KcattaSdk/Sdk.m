@@ -112,16 +112,26 @@
             if(status == ATTrackingManagerAuthorizationStatusAuthorized){
                 //[FBSDKSettings setAdvertiserTrackingEnabled:YES];
                 //[FBSDKSettings setAdvertiserIDCollectionEnabled:YES];
+                if(self.delegate != NULL){
+                    if ([self.delegate respondsToSelector: @selector(onAllowATT)]){
+                        [self.delegate onAllowATT];
+                    }
+                }
             }
             else{
                 //[FBSDKSettings setAdvertiserTrackingEnabled:NO];
+                if(self.delegate != NULL){
+                    if ([self.delegate respondsToSelector: @selector(onDisallowATT)]){
+                        [self.delegate onDisallowATT];
+                    }
+                }
             }
         }];
     }
 }
 
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
-    /*if(options == NULL){
+    /*if(options != NULL){
      BOOL handledFB = [[FBSDKApplicationDelegate sharedInstance] application:application
      openURL:url
      sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
@@ -263,6 +273,7 @@
             ProductInfo* prodInfo = [inAppProducts objectAtIndex:j];
             if([item.productIdentifier isEqual:[prodInfo productId]]){
                 prodInfo.price = item.price;
+                prodInfo.productName = item.localizedTitle;
                 prodInfo.localizedPrice = [item localizedPrice];
                 prodInfo.priceLocale = item.priceLocale;
                 prodInfo.currencyCode = [item currencyCode];
@@ -571,6 +582,23 @@
 -(void)trackingEvent:(NSString *)eventName withParams:(NSDictionary *)params{
     [FIRAnalytics logEventWithName:eventName
                         parameters:params];
+}
+-(NSString *)getSubscriptionPrice:(NSString *)productId withBasePlanId:(NSString *)basePlanId withOfferId:(NSString *)offerId{
+    NSMutableArray* products = [self.dictProducts objectForKey:@"subs"];
+    ProductInfo* findProductItem = nil;
+        if(products != NULL){
+            for (int j=0; j< products.count; j++) {
+                ProductInfo* productItem = [products objectAtIndex:j];
+                if([productItem.productId isEqual:productId]){
+                    findProductItem = productItem;
+                    break;
+                }
+            }
+    }
+    if(findProductItem != NULL){
+        return findProductItem.localizedPrice;
+    }
+    return @"";
 }
 ///
 /// implement GADBannerViewDelegate
