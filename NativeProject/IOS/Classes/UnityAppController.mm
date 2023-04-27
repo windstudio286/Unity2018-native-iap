@@ -474,7 +474,7 @@ extern "C" void UnityRequestQuit()
     NSLog(@"transInfo.productId: %@",transaction.productId);
     NSLog(@"productInfo.productType: %@",productInfo.productType);
     NSLog(@"transInfo.productType: %@",transaction.productType);
-    NSLog(@"transInfo.purchasedToken: %@",transaction.purchasedToken);
+    NSLog(@"transInfo.purchaseToken: %@",transaction.purchaseToken);
     NSLog(@"transInfo.transactionIdentifier: %@",transaction.transactionIdentifier);
     NSLog(@"transInfo.transactionDate: %@",[Utils displayDate:transaction.transactionDate]);
 }
@@ -487,7 +487,7 @@ extern "C" void UnityRequestQuit()
         TransactionInfo* transInfo = [listTrans objectAtIndex:j];
         NSLog(@"transInfo.productId: %@",transInfo.productId);
         NSLog(@"transInfo.productType: %@",transInfo.productType);
-        NSLog(@"transInfo.purchasedToken: %@",transInfo.purchasedToken);
+        NSLog(@"transInfo.purchaseToken: %@",transInfo.purchaseToken);
         NSLog(@"transInfo.transactionIdentifier: %@",transInfo.transactionIdentifier);
         NSLog(@"transInfo.transactionDate: %@",[Utils displayDate:transInfo.transactionDate]);
     }
@@ -498,7 +498,7 @@ extern "C" void UnityRequestQuit()
         TransactionInfo* transInfo = [listTrans objectAtIndex:j];
         NSLog(@"transInfo.productId: %@",transInfo.productId);
         NSLog(@"transInfo.productType: %@",transInfo.productType);
-        NSLog(@"transInfo.purchasedToken: %@",transInfo.purchasedToken);
+        NSLog(@"transInfo.purchaseToken: %@",transInfo.purchaseToken);
         NSLog(@"transInfo.transactionIdentifier: %@",transInfo.transactionIdentifier);
         NSLog(@"transInfo.transactionDate: %@",[Utils displayDate:transInfo.transactionDate]);
     }

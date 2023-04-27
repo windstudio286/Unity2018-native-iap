@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Request price of list product with corresponding type
 // typeProduct: inapp or subs
 -(void)requestPriceProduct:(NSArray<ProductInfo*>* _Nullable) listProducts withType:(NSString*) typeProduct;
--(void)payProduct:(NSString*) productId withOfferId:(NSString*) offerID forProductType:(NSString*) productType;
+-(void)payProduct:(NSString*) productId withBasePlanId:(NSString*) basePlanId withOfferId:(NSString*) offerID forProductType:(NSString*) productType;
 -(void)restoreProducts;
 -(NSDictionary*) getDictProducts;
 -(ProductInfo*) findProductInfobyId:(NSString*) productId;

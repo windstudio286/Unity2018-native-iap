@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 
 @interface TransactionInfo : NSObject
-@property (nonatomic,strong) NSString *purchasedToken;
+@property (nonatomic,strong) NSString *purchaseToken;
 @property (nonatomic,strong) NSString *productId;
 @property (nonatomic,strong) NSString *productType;
 @property (nonatomic,strong) NSDate *transactionDate;

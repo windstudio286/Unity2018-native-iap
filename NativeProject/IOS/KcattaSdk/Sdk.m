@@ -290,7 +290,7 @@
         }
     }
 }
--(void)payProduct:(NSString *)productId withOfferId:(NSString *)offerID forProductType:(NSString *)productType{
+-(void)payProduct:(NSString *)productId withBasePlanId:(NSString*) basePlanId withOfferId:(NSString *)offerID forProductType:(NSString *)productType{
     NSMutableArray* products = [self.dictProducts objectForKey:productType];
     ProductInfo* findProductItem = nil;
     if(products == NULL){
@@ -660,7 +660,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 }
 
 /// Tells the delegate that the ad presented full screen content.
-- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+- (void)adWillPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
     NSLog(@"Ad did present full screen content.");
     if([ad isKindOfClass:[GADRewardedAd class]]){
         GADRewardedAd *rewardedAd = (GADRewardedAd*)ad;

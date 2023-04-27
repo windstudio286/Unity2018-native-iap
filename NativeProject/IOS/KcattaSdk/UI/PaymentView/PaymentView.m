@@ -134,7 +134,7 @@
             /*NSString *encodedReceipt2 = [transaction.transactionReceipt base64EncodedStringWithOptions:0];
              NSLog(@"receipt2: %@",encodedReceipt2);*/
             
-            trans.purchasedToken = encodedReceipt;
+            trans.purchaseToken = encodedReceipt;
             trans.transactionDate = transaction.transactionDate;
             trans.transactionIdentifier = transaction.transactionIdentifier;
             if(productInfo == NULL){
@@ -192,7 +192,7 @@
         trans = [[TransactionInfo alloc] init];
         trans.productId = transaction.payment.productIdentifier;
         ProductInfo* productInfo = [[Sdk sharedInstance] findProductInfobyId:trans.productId];
-        trans.purchasedToken = encodedReceipt;
+        trans.purchaseToken = encodedReceipt;
         trans.transactionIdentifier = transaction.transactionIdentifier;
         trans.productType = productInfo.productType;
         trans.transactionDate = transaction.transactionDate;
