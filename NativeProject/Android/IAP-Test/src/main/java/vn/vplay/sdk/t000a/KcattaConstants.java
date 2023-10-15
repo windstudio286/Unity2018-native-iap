@@ -14,6 +14,9 @@ public class KcattaConstants {
     public final static String ADS_TYPE_INTERSTITIAL = "interstitialAd";
     public final static String ADS_TYPE_REWARDED = "rewardedAd";
 
+    public final static int INT_BANNER_TYPE = 0;
+    public final static int INT_INTERSTITIAL_TYPE = 2;
+    public final static int INT_REWARD_TYPE = 1;
     public final static int QUERY_PRODUCT_NOT_AVAILABLE = -99;
     public final static int NO_INTERNET_CONNECTION = -100;
     public final static int UN_KNOW = -999;

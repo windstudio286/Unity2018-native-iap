@@ -7,23 +7,28 @@ using System.Runtime.InteropServices;
 public class Main : MonoBehaviour
 {
 #if UNITY_IPHONE
-    [DllImport("__Internal")] public static extern void sendDataFromUnity(string key,string value);
+    [DllImport("__Internal")] public static extern void sendDataFromUnity(string key, string value);
 #endif
     public UnityEngine.UI.Text text;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void onBtnDowngradeClick()
     {
+        if (AdManager.Instance.isAvailableAd(AdManager.Instance.GetDefaultAdBanner()))
+        {
+            AdManager.Instance.ShowAd(AdManager.Instance.GetDefaultAdBanner());
+        }
+        return;
         StringBuilder sb = new StringBuilder();
         JsonWriter writer = new JsonWriter(sb);
         writer.WriteObjectStart();
@@ -54,6 +59,23 @@ public class Main : MonoBehaviour
 
     public void onBtnUpgradeClick()
     {
+        if (!AdManager.Instance.isAvailableAd(AdManager.Instance.GetDefaultAdBanner()))
+        {
+            AdInfo adInfo = new AdInfo();
+            adInfo.adType = AdManager.BannerAd;
+            adInfo.adViewOnLoaded = (adId, isLoaded) =>
+            {
+                Debug.Log("Banner adViewOnLoaded:" + adId);
+                Debug.Log("Banner adViewOnLoaded:" + isLoaded);
+            };
+            adInfo.adViewOnFail = (adId, message) =>
+            {
+                Debug.Log("Banner adViewOnFail:" + adId);
+                Debug.Log("Banner adViewOnFail:" + message);
+            };
+            AdManager.Instance.LoadAdById(AdManager.Instance.GetDefaultAdBanner(), adInfo);
+        }
+        return;
         StringBuilder sb = new StringBuilder();
         JsonWriter writer = new JsonWriter(sb);
         writer.WriteObjectStart();
@@ -82,8 +104,61 @@ public class Main : MonoBehaviour
 #endif
     }
 
-    public void onBtnPayClick()
+    public void onBtnLoadRewardedAdClick()
     {
+        if (!AdManager.Instance.isAvailableAd(AdManager.Instance.GetDefaultAdReward()))
+        {
+            AdInfo adInfo = new AdInfo();
+            adInfo.adType = AdManager.RewardAd;
+            adInfo.adViewOnLoaded = (adId, isLoaded) =>
+            {
+                Debug.Log("Reward adViewOnLoaded:" + adId);
+                Debug.Log("Reward adViewOnLoaded:" + isLoaded);
+            };
+            adInfo.adViewOnFail = (adId, message) =>
+            {
+                Debug.Log("Reward adViewOnFail:" + adId);
+                Debug.Log("Reward adViewOnFail:" + message);
+            };
+            adInfo.adViewOnDidPresent = (adId) =>
+            {
+                Debug.Log("Reward adViewOnDidPresent:" + adId);
+            };
+            adInfo.adViewOnDismissPresent = (adId) =>
+            {
+                Debug.Log("Reward adViewOnDismissPresent:" + adId);
+            };
+            adInfo.adViewOnReward = (adId,data) =>
+            {
+                Debug.Log("Reward adViewOnReward:" + adId);
+                Debug.Log("Reward adViewOnReward:" + data);
+            };
+            AdManager.Instance.LoadAdById(AdManager.Instance.GetDefaultAdReward(), adInfo);
+        }
+    }
+
+    public void onBtnShowRewardedAdClick()
+    {
+        if (AdManager.Instance.isAvailableAd(AdManager.Instance.GetDefaultAdReward()))
+        {
+            AdManager.Instance.ShowAd(AdManager.Instance.GetDefaultAdReward());
+        }
+    }
+    public void onBtnHideBannerAdClick()
+    {
+        if (AdManager.Instance.isAvailableAd(AdManager.Instance.GetDefaultAdBanner()))
+        {
+            AdManager.Instance.HideAd(AdManager.Instance.GetDefaultAdBanner());
+        }
+    }
+
+        public void onBtnPayClick()
+    {
+        if (AdManager.Instance.isAvailableAd(AdManager.Instance.GetDefaultAdInterstitial()))
+        {
+            AdManager.Instance.ShowAd(AdManager.Instance.GetDefaultAdInterstitial());
+        }
+        return;
         StringBuilder sb = new StringBuilder();
         JsonWriter writer = new JsonWriter(sb);
         writer.WriteObjectStart();
@@ -113,6 +188,31 @@ public class Main : MonoBehaviour
 
     public void onButtonClick()
     {
+        if (!AdManager.Instance.isAvailableAd(AdManager.Instance.GetDefaultAdInterstitial()))
+        {
+            AdInfo adInfo = new AdInfo();
+            adInfo.adType = AdManager.InterstitialAd;
+            adInfo.adViewOnLoaded = (adId, isLoaded) =>
+            {
+                Debug.Log("Interstital adViewOnLoaded:" + adId);
+                Debug.Log("Interstital adViewOnLoaded:" + isLoaded);
+            };
+            adInfo.adViewOnFail = (adId, message) =>
+            {
+                Debug.Log("Interstital adViewOnFail:" + adId);
+                Debug.Log("Interstital adViewOnFail:" + message);
+            };
+            adInfo.adViewOnDidPresent = (adId) =>
+            {
+                Debug.Log("Interstital adViewOnDidPresent:" + adId);
+            };
+            adInfo.adViewOnDismissPresent = (adId) =>
+            {
+                Debug.Log("Interstital adViewOnDismissPresent:" + adId);
+            };
+            AdManager.Instance.LoadAdById(AdManager.Instance.GetDefaultAdInterstitial(), adInfo);
+        }
+        return;
         StringBuilder sb = new StringBuilder();
         JsonWriter writer = new JsonWriter(sb);
         writer.WriteObjectStart();
@@ -140,7 +240,7 @@ public class Main : MonoBehaviour
 
     void setTextFromNative(string newValue)
     {
-        if(text != null)
+        if (text != null)
         {
             text.text = newValue;
         }

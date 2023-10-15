@@ -116,6 +116,57 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                         }
                     });
                 }
+                if(key.equals(KcattaCmd.LOAD_ADS)){
+                    JSONObject valueObject = jsonObject.getJSONObject(KcattaConstants.JSON_VALUE);
+                    String adId = valueObject.getString("adId");
+                    int adType = valueObject.getInt("adType");
+                    this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(adType == KcattaConstants.INT_BANNER_TYPE){
+                                KcattaSdk.getInstance().addOrCreateBannerAd(adId,"top");
+                            }
+                            if(adType == KcattaConstants.INT_INTERSTITIAL_TYPE){
+                                KcattaSdk.getInstance().createInterstitalAd(adId);
+                            }
+                            if(adType == KcattaConstants.INT_REWARD_TYPE){
+                                KcattaSdk.getInstance().createRewardedAd(adId);
+                            }
+                        }
+                    });
+                }
+                if(key.equals(KcattaCmd.SHOW_ADS)){
+                    JSONObject valueObject = jsonObject.getJSONObject(KcattaConstants.JSON_VALUE);
+                    String adId = valueObject.getString("adId");
+                    int adType = valueObject.getInt("adType");
+                    this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(adType == KcattaConstants.INT_BANNER_TYPE){
+                                KcattaSdk.getInstance().showBannerAd();
+                            }
+                            if(adType == KcattaConstants.INT_INTERSTITIAL_TYPE){
+                                KcattaSdk.getInstance().showIntestitialAd();
+                            }
+                            if(adType == KcattaConstants.INT_REWARD_TYPE){
+                                KcattaSdk.getInstance().showRewardedAd();
+                            }
+                        }
+                    });
+                }
+                if(key.equals(KcattaCmd.HIDE_ADS)){
+                    JSONObject valueObject = jsonObject.getJSONObject(KcattaConstants.JSON_VALUE);
+                    String adId = valueObject.getString("adId");
+                    int adType = valueObject.getInt("adType");
+                    this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(adType == KcattaConstants.INT_BANNER_TYPE){
+                                KcattaSdk.getInstance().hideBannerAd();
+                            }
+                        }
+                    });
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -176,6 +227,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     {
         super.onPause();
         mUnityPlayer.pause();
+        Log.i("BEM","onPause");
     }
 
     // Resume Unity
@@ -183,6 +235,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     {
         super.onResume();
         mUnityPlayer.resume();
+        Log.i("BEM","onResume");
     }
 
     @Override protected void onStart()
@@ -195,6 +248,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     {
         super.onStop();
         mUnityPlayer.stop();
+        Log.i("BEM","onStop");
     }
 
     // Low Memory Unity
@@ -386,30 +440,191 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     public void onAdFailedToLoad(String adType, String adId, AdError error) {
         Log.i("BEM","onAdFailedToLoad adType: "+adType);
         Log.i("BEM","onAdFailedToLoad adId: "+adId);
+        if(hashMapCmd != null){
+            JSONObject json = hashMapCmd.get(KcattaCmd.LOAD_ADS);
+            if(json != null){
+                String receivedObject = null;
+                String receivedFunc = null;
+                try {
+                    receivedObject = json.getString(KcattaConstants.JSON_RECEIVED_OBJECT);
+                    receivedFunc = json.getString(KcattaConstants.JSON_RECEIVED_FUNCTION);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(receivedObject != null && receivedFunc != null){
+                    Log.i("BEM","sendDataFromNative");
+                    if(mUnityPlayer != null){
+                        Gson gson = new GsonBuilder()
+                                .excludeFieldsWithoutExposeAnnotation()
+                                .create();
+                        KcattaResponse response = new KcattaResponse();
+                        response.setSuccess(true);
+                        response.setKey(KcattaCmd.LOAD_ADS);
+                        AdInfo adInfo = new AdInfo();
+                        adInfo.setState(0);
+                        adInfo.setAdId(adId);
+                        response.setMessage(adInfo);
+                        String jsonData = gson.toJson(response);
+                        Log.i("BEM",jsonData);
+                        mUnityPlayer.UnitySendMessage(receivedObject,receivedFunc,jsonData);
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onAdLoaded(String adType, String adId) {
         Log.i("BEM","onAdLoaded adType: "+adType);
         Log.i("BEM","onAdLoaded adId: "+adId);
+        if(hashMapCmd != null){
+            JSONObject json = hashMapCmd.get(KcattaCmd.LOAD_ADS);
+            if(json != null){
+                String receivedObject = null;
+                String receivedFunc = null;
+                try {
+                    receivedObject = json.getString(KcattaConstants.JSON_RECEIVED_OBJECT);
+                    receivedFunc = json.getString(KcattaConstants.JSON_RECEIVED_FUNCTION);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(receivedObject != null && receivedFunc != null){
+                    Log.i("BEM","sendDataFromNative");
+                    if(mUnityPlayer != null){
+                        Gson gson = new GsonBuilder()
+                                .excludeFieldsWithoutExposeAnnotation()
+                                .create();
+                        KcattaResponse response = new KcattaResponse();
+                        response.setSuccess(true);
+                        response.setKey(KcattaCmd.LOAD_ADS);
+                        AdInfo adInfo = new AdInfo();
+                        adInfo.setState(1);
+                        adInfo.setAdId(adId);
+                        response.setMessage(adInfo);
+                        String jsonData = gson.toJson(response);
+                        Log.i("BEM",jsonData);
+                        mUnityPlayer.UnitySendMessage(receivedObject,receivedFunc,jsonData);
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onAdClosed(String adType, String adId) {
         Log.i("BEM","onAdClosed adType: "+adType);
         Log.i("BEM","onAdClosed adId: "+adId);
+        if(hashMapCmd != null){
+            JSONObject json = hashMapCmd.get(KcattaCmd.SHOW_ADS);
+            if(json != null){
+                String receivedObject = null;
+                String receivedFunc = null;
+                try {
+                    receivedObject = json.getString(KcattaConstants.JSON_RECEIVED_OBJECT);
+                    receivedFunc = json.getString(KcattaConstants.JSON_RECEIVED_FUNCTION);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(receivedObject != null && receivedFunc != null){
+                    Log.i("BEM","sendDataFromNative");
+                    if(mUnityPlayer != null){
+                        Gson gson = new GsonBuilder()
+                                .excludeFieldsWithoutExposeAnnotation()
+                                .create();
+                        KcattaResponse response = new KcattaResponse();
+                        response.setSuccess(true);
+                        response.setKey(KcattaCmd.SHOW_ADS);
+                        AdInfo adInfo = new AdInfo();
+                        adInfo.setState(102);
+                        adInfo.setAdId(adId);
+                        response.setMessage(adInfo);
+                        String jsonData = gson.toJson(response);
+                        Log.i("BEM",jsonData);
+                        mUnityPlayer.UnitySendMessage(receivedObject,receivedFunc,jsonData);
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onAdOpened(String adType, String adId) {
         Log.i("BEM","onAdOpened adType: "+adType);
         Log.i("BEM","onAdOpened adId: "+adId);
+        if(hashMapCmd != null){
+            JSONObject json = hashMapCmd.get(KcattaCmd.SHOW_ADS);
+            if(json != null){
+                String receivedObject = null;
+                String receivedFunc = null;
+                try {
+                    receivedObject = json.getString(KcattaConstants.JSON_RECEIVED_OBJECT);
+                    receivedFunc = json.getString(KcattaConstants.JSON_RECEIVED_FUNCTION);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(receivedObject != null && receivedFunc != null){
+                    Log.i("BEM","sendDataFromNative");
+                    if(mUnityPlayer != null){
+                        Gson gson = new GsonBuilder()
+                                .excludeFieldsWithoutExposeAnnotation()
+                                .create();
+                        KcattaResponse response = new KcattaResponse();
+                        response.setSuccess(true);
+                        response.setKey(KcattaCmd.SHOW_ADS);
+                        AdInfo adInfo = new AdInfo();
+                        adInfo.setState(100);
+                        adInfo.setAdId(adId);
+                        response.setMessage(adInfo);
+                        String jsonData = gson.toJson(response);
+                        Log.i("BEM",jsonData);
+                        mUnityPlayer.UnitySendMessage(receivedObject,receivedFunc,jsonData);
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onAdEarnedReward(String adType, String adId, int rewardAmount) {
         Log.i("BEM","onAdEarnedReward adType: "+adType);
         Log.i("BEM","onAdEarnedReward adId: "+adId);
+        if(hashMapCmd != null){
+            JSONObject json = hashMapCmd.get(KcattaCmd.SHOW_ADS);
+            if(json != null){
+                String receivedObject = null;
+                String receivedFunc = null;
+                try {
+                    receivedObject = json.getString(KcattaConstants.JSON_RECEIVED_OBJECT);
+                    receivedFunc = json.getString(KcattaConstants.JSON_RECEIVED_FUNCTION);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(receivedObject != null && receivedFunc != null){
+                    Log.i("BEM","sendDataFromNative");
+                    if(mUnityPlayer != null){
+                        Gson gson = new GsonBuilder()
+                                .excludeFieldsWithoutExposeAnnotation()
+                                .create();
+                        KcattaResponse response = new KcattaResponse();
+                        response.setSuccess(true);
+                        response.setKey(KcattaCmd.SHOW_ADS);
+                        AdInfo adInfo = new AdInfo();
+                        adInfo.setState(103);
+                        adInfo.setAdId(adId);
+                        adInfo.setData(rewardAmount);
+                        response.setMessage(adInfo);
+                        String jsonData = gson.toJson(response);
+                        Log.i("BEM",jsonData);
+                        mUnityPlayer.UnitySendMessage(receivedObject,receivedFunc,jsonData);
+                    }
+                }
+            }
+        }
     }
 
     @Override
