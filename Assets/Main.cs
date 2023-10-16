@@ -22,6 +22,22 @@ public class Main : MonoBehaviour
 
     }
 
+    public void onBtnLogEventClick()
+    {
+        JsonData parameters = new JsonData();
+        parameters[FirebaseManager.PARAM_LEVEL_NAME] = "level_100";
+        FirebaseManager.Instance.LogEvent(FirebaseManager.EVENT_LEVEL_START, parameters);
+    }
+    public void onBtnFetchAndActiveClick()
+    {
+        FirebaseManager.Instance.remoteConfigFetchAndActiveAction = (success) =>
+        {
+            Debug.Log("onBtnFetchAndActiveClick: " + success);
+            Debug.Log("onBtnFetchAndActiveClick: "+FirebaseManager.Instance.RemoteConfigGetString("level_1"));
+        };
+        FirebaseManager.Instance.RemoteConfigFetchAndActive();
+    }
+
     public void onBtnDowngradeClick()
     {
         if (AdManager.Instance.isAvailableAd(AdManager.Instance.GetDefaultAdBanner()))

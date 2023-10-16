@@ -3,6 +3,12 @@ package vn.vplay.sdk.t000a;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
 import com.google.android.gms.ads.AdError;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.unity3d.player.*;
@@ -15,13 +21,18 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class UnityPlayerActivity extends Activity implements KcattaListener
 {
@@ -41,6 +52,10 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
     }
 
     protected HashMap<String, JSONObject> hashMapCmd;
+
+    public String remoteConfigGetString(String remoteKey) {
+        return FirebaseRemoteConfig.getInstance().getString(remoteKey);
+    }
     public void sendDataFromUnity(String json) {
         Log.i("BEM","sendDataFromUnity: "+json);
         //receivedObject: IAPUnitySingleton
@@ -94,7 +109,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                     KcattaSdk.getInstance().payProductV5("vn.vplay.sdk.t000a.subs1","basic-2-auto-renewal","offer-vip-user-week-custom",BillingClient.ProductType.SUBS);
 
                 }
-                if(key.equals("UPGRADE_PRODUCT")){
+                if(key.equals(KcattaCmd.UPGRADE_PRODUCT)){
                     String value = jsonObject.getString(KcattaConstants.JSON_VALUE);
                     value = "vn.vplay.sdk.t000a.subs1";
                     //KcattaSdk.getInstance().updatePayV5("vn.vplay.sdk.t000a.subs1","basic-2-auto-renewal","offer-vip-user-week-custom","vn.vplay.sdk.t000a.subs2");
@@ -105,7 +120,7 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                         }
                     });
                 }
-                if(key.equals("DOWNGRADE_PRODUCT")){
+                if(key.equals(KcattaCmd.DOWNGRADE_PRODUCT)){
                     //KcattaSdk.getInstance().queryPurchase(BillingClient.ProductType.SUBS);
                     this.runOnUiThread(new Runnable() {
                         @Override
@@ -167,6 +182,72 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                         }
                     });
                 }
+                if(key.equals(KcattaCmd.LOG_EVENT)){
+                    JSONObject valueObject = jsonObject.getJSONObject(KcattaConstants.JSON_VALUE);
+                    String eventName = valueObject.getString("eventName");
+                    JSONObject parametersObject = valueObject.getJSONObject("parameters");
+                    this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Bundle params = Utils.convertJsonToBundle(parametersObject);
+                                Utils.logFirebaseEvent(UnityPlayerActivity.this,eventName,params);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+                if(key.equals(KcattaCmd.FETCH_ACTIVE)){
+                    FirebaseRemoteConfig.getInstance().fetchAndActivate()
+                            .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Boolean> task) {
+                                    if (task.isSuccessful()) {
+                                        boolean updated = task.getResult();
+                                        Log.d("BEM", "Config params updated: " + updated);
+                                        Toast.makeText(UnityPlayerActivity.this, "Fetch and activate succeeded",
+                                                Toast.LENGTH_SHORT).show();
+                                        /*for (Map.Entry<String, FirebaseRemoteConfigValue> e : FirebaseRemoteConfig.getInstance().getAll().entrySet()) {
+                                            Log.d("BEM", "e.getKey(): " + e.getKey());
+                                            Log.d("BEM", "e.getValue(): " + e.getValue().asString());
+
+                                        }*/
+                                        if(hashMapCmd != null){
+                                            JSONObject json = hashMapCmd.get(KcattaCmd.FETCH_ACTIVE);
+                                            if(json != null){
+                                                String receivedObject = null;
+                                                String receivedFunc = null;
+                                                try {
+                                                    receivedObject = json.getString(KcattaConstants.JSON_RECEIVED_OBJECT);
+                                                    receivedFunc = json.getString(KcattaConstants.JSON_RECEIVED_FUNCTION);
+
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                if(receivedObject != null && receivedFunc != null){
+                                                    Log.i("BEM","sendDataFromNative");
+                                                    if(mUnityPlayer != null){
+                                                        Gson gson = new GsonBuilder()
+                                                                .excludeFieldsWithoutExposeAnnotation()
+                                                                .create();
+                                                        KcattaResponse response = new KcattaResponse();
+                                                        response.setSuccess(true);
+                                                        response.setKey(KcattaCmd.FETCH_ACTIVE);
+                                                        String jsonData = gson.toJson(response);
+                                                        Log.i("BEM",jsonData);
+                                                        mUnityPlayer.UnitySendMessage(receivedObject,receivedFunc,jsonData);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        Toast.makeText(UnityPlayerActivity.this, "Fetch failed",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -204,6 +285,13 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
         // promptForPushNotifications will show the native Android notification permission prompt.
         // We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step 7)
         OneSignal.promptForPushNotifications();*/
+        //Config Remote Config
+        FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+
     }
 
     @Override protected void onNewIntent(Intent intent)
