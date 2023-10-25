@@ -222,6 +222,7 @@ public class FirebaseManager : MonoBehaviour
     [DllImport("__Internal")] public static extern void sendDataFromUnity(string jsonString);
 #endif
     public System.Action<bool> remoteConfigFetchAndActiveAction;
+    public bool isActived;
     private static FirebaseManager _instance;
     public static FirebaseManager Instance
     {
@@ -265,12 +266,13 @@ public class FirebaseManager : MonoBehaviour
     {
         Debug.Log("FirebaseManager setTextFromNative:" + newValue);
         JsonData jsonData = JsonMapper.ToObject(newValue);
-        string key = (string)jsonData["key"];
-        bool success = (bool)jsonData["success"];
-        if (success && key.Equals("FETCH_ACTIVE"))
+        string key = (string)jsonData[Constants.key];
+        bool success = (bool)jsonData[Constants.success];
+        if (success && key.Equals(Constants.ACTION_FETCH_ACTIVE))
         {
             if(remoteConfigFetchAndActiveAction != null)
             {
+                isActived = success;
                 remoteConfigFetchAndActiveAction(success);
             }
         }
@@ -279,14 +281,14 @@ public class FirebaseManager : MonoBehaviour
     public void LogEvent(string eventName,LitJson.JsonData parametersJson)
     {
         JsonData jsonDataRoot = new JsonData();
-        jsonDataRoot["receivedObject"] = this.gameObject.name;
-        jsonDataRoot["receivedFunc"] = "setTextFromNative";
-        jsonDataRoot["key"] = "LOG_EVENT";
+        jsonDataRoot[Constants.receivedObject] = this.gameObject.name;
+        jsonDataRoot[Constants.receivedFunc] = Constants.setTextFromNative;
+        jsonDataRoot[Constants.key] = Constants.ACTION_LOG_EVENT;
 
         JsonData jsonDataValue = new JsonData();
         jsonDataValue["eventName"] = eventName;
         jsonDataValue["parameters"] = parametersJson;
-        jsonDataRoot["value"] = jsonDataValue;
+        jsonDataRoot[Constants.value] = jsonDataValue;
 
         SendJsonString(jsonDataRoot.ToJson());
     }
@@ -294,9 +296,9 @@ public class FirebaseManager : MonoBehaviour
     public void RemoteConfigFetchAndActive()
     {
         JsonData jsonDataRoot = new JsonData();
-        jsonDataRoot["receivedObject"] = this.gameObject.name;
-        jsonDataRoot["receivedFunc"] = "setTextFromNative";
-        jsonDataRoot["key"] = "FETCH_ACTIVE";
+        jsonDataRoot[Constants.receivedObject] = this.gameObject.name;
+        jsonDataRoot[Constants.receivedFunc] = Constants.setTextFromNative;
+        jsonDataRoot[Constants.key] = Constants.ACTION_FETCH_ACTIVE;
         SendJsonString(jsonDataRoot.ToJson());
     }
 

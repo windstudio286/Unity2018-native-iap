@@ -180,7 +180,7 @@ public class AdManager : MonoBehaviour
         JsonData jsonData = JsonMapper.ToObject(newValue);
         string key = (string)jsonData["key"];
         bool success = (bool)jsonData["success"];
-        if (success && key.Equals("LOAD_ADS"))
+        if (success && key.Equals(Constants.ACTION_LOAD_ADS))
         {
             JsonData jsonValueData = jsonData["value"];
             string adId = (string)jsonValueData["adId"];
