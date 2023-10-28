@@ -13,6 +13,7 @@ public class Constants
     public const string ACTION_HIDE_ADS = "HIDE_ADS";
     public const string ACTION_FETCH_ACTIVE = "FETCH_ACTIVE";
     public const string ACTION_LOG_EVENT = "LOG_EVENT";
+    public const string ACTION_LOG_USER_PROPS = "LOG_USER_PROPS";
 
     public const string receivedObject = "receivedObject";
     public const string receivedFunc = "receivedFunc";

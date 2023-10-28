@@ -198,6 +198,21 @@ public class UnityPlayerActivity extends Activity implements KcattaListener
                         }
                     });
                 }
+                if(key.equals(KcattaCmd.LOG_USER_PROPS)){
+                    JSONObject valueObject = jsonObject.getJSONObject(KcattaConstants.JSON_VALUE);
+                    String nameProp = valueObject.getString("nameProp");
+                    String valueProp = valueObject.getString("valueProp");
+                    this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Utils.logUserProperty(UnityPlayerActivity.this,nameProp,valueProp);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
                 if(key.equals(KcattaCmd.FETCH_ACTIVE)){
                     FirebaseRemoteConfig.getInstance().fetchAndActivate()
                             .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {

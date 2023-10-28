@@ -12,7 +12,7 @@ public class KcattaCmd {
     public final static String UPGRADE_PRODUCT = "UPGRADE_PRODUCT";
     public final static String DOWNGRADE_PRODUCT = "DOWNGRADE_PRODUCT";
     public final static String LOG_EVENT = "LOG_EVENT";
-
+    public final static String LOG_USER_PROPS = "LOG_USER_PROPS";
     public final static String FETCH_ACTIVE = "FETCH_ACTIVE";
     public final static String USER_ID_ONE_SIGNAL = "USER_ID_ONE_SIGNAL";
     public final static String POST_NOTIFICATION_ONE_SIGNAL = "POST_NOTIFICATION_ONE_SIGNAL";

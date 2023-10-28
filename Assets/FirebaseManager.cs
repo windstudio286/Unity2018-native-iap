@@ -293,6 +293,21 @@ public class FirebaseManager : MonoBehaviour
         SendJsonString(jsonDataRoot.ToJson());
     }
 
+    public void LogUserProperty(string nameProp, string valueProp)
+    {
+        JsonData jsonDataRoot = new JsonData();
+        jsonDataRoot[Constants.receivedObject] = this.gameObject.name;
+        jsonDataRoot[Constants.receivedFunc] = Constants.setTextFromNative;
+        jsonDataRoot[Constants.key] = Constants.ACTION_LOG_USER_PROPS;
+
+        JsonData jsonDataValue = new JsonData();
+        jsonDataValue["nameProp"] = nameProp;
+        jsonDataValue["valueProp"] = valueProp;
+        jsonDataRoot[Constants.value] = jsonDataValue;
+
+        SendJsonString(jsonDataRoot.ToJson());
+    }
+
     public void RemoteConfigFetchAndActive()
     {
         JsonData jsonDataRoot = new JsonData();

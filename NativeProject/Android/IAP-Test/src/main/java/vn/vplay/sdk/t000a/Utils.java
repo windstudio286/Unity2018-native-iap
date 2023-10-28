@@ -64,6 +64,12 @@ public class Utils {
             firebaseAnalytics.logEvent(eventName, params);
         }
     }
+    public static void logUserProperty(Activity activity,String nameProp, String valueProp){
+        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(activity);
+        if (firebaseAnalytics != null) {
+            firebaseAnalytics.setUserProperty(nameProp, valueProp);
+        }
+    }
     public static boolean isOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm == null)
